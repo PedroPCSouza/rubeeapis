@@ -47,12 +47,7 @@ function Icon({ name, size = 22 }: { name: IconName; size?: number }) {
 function BrandMark() {
   return (
     <a className="brand" href="#inicio" aria-label="Rubee Apis, voltar ao início">
-      <svg viewBox="0 0 44 44" aria-hidden="true">
-        <path d="M22 3 38.5 12.5v19L22 41 5.5 31.5v-19z" fill="none" stroke="currentColor" strokeWidth="1.5"/>
-        <path d="M15.5 19.5c2.7-4.4 10.3-4.4 13 0M16 25c3.2 3.6 8.8 3.6 12 0M22 15v15" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-        <path d="M13 17c-3-3-6.5-.8-5 2.8 1.2 2.7 4.1 3 7 2.2M31 17c3-3 6.5-.8 5 2.8-1.2 2.7-4.1 3-7 2.2" fill="none" stroke="currentColor" strokeWidth="1.5"/>
-      </svg>
-      <span><strong>Rubee</strong><small>APIS</small></span>
+      <img className="brand-logo" src="/images/rubee-logo-official.webp" alt="Rubee Apis" width="343" height="271" />
     </a>
   );
 }
@@ -174,14 +169,49 @@ function Origin() {
       <div className="origin-copy">
         <p className="section-kicker section-kicker--light">Rara por natureza</p>
         <h2>Vermelha na cor.<br/><em>Brasileira na origem.</em></h2>
-        <p>A própolis vermelha se destaca por sua coloração característica e por sua origem botânica. Na Rubee Apis, ela chega em um frasco de 30 ml com conta-gotas, facilitando sua inclusão na rotina.</p>
+        <p>A própolis vermelha se destaca pela coloração característica e pela relação com ecossistemas costeiros brasileiros. Na Rubee Apis, ela chega em um frasco de 30 ml com conta-gotas, facilitando sua inclusão na rotina.</p>
         <div className="specs">
           <div><span>Tipo</span><b>Extrato de própolis vermelha</b></div>
           <div><span>Conteúdo</span><b>30 ml</b></div>
           <div><span>Origem</span><b>Brasileira</b></div>
           <div><span>Embalagem</span><b>Frasco âmbar com conta-gotas</b></div>
         </div>
-        <a className="text-link" href="#qualidade">Conheça o nosso cuidado <Icon name="arrow" size={18}/></a>
+        <a className="text-link" href="#ciencia">Conheça a origem botânica <Icon name="arrow" size={18}/></a>
+      </div>
+    </section>
+  );
+}
+
+function OriginScience() {
+  return (
+    <section className="section origin-science" id="ciencia">
+      <div className="container">
+        <div className="section-heading">
+          <div><p className="section-kicker">Origem & pesquisa</p><h2>O que a ciência<br/><em>ajuda a explicar.</em></h2></div>
+          <p>Informação científica apresentada com responsabilidade: contexto sobre a matéria-prima, sem transformar pesquisa em promessa terapêutica.</p>
+        </div>
+        <div className="science-grid">
+          <article className="science-card">
+            <span>01</span><div className="science-card-icon"><Icon name="leaf"/></div>
+            <h3>Uma origem costeira</h3>
+            <p>Estudos identificam a <i>Dalbergia ecastophyllum</i>, conhecida como rabo-de-bugio, como uma das principais fontes botânicas da própolis vermelha brasileira.</p>
+          </article>
+          <article className="science-card">
+            <span>02</span><div className="science-card-icon"><Icon name="spark"/></div>
+            <h3>Composição singular</h3>
+            <p>A literatura descreve isoflavonoides e outros compostos fenólicos. A composição pode variar conforme origem, safra e processo de extração.</p>
+          </article>
+          <article className="science-card">
+            <span>03</span><div className="science-card-icon"><Icon name="shield"/></div>
+            <h3>Ciência com responsabilidade</h3>
+            <p>Resultados de laboratório não comprovam, por si só, benefícios clínicos deste produto. Por isso, a Rubee Apis não promete prevenir, tratar ou curar doenças.</p>
+          </article>
+        </div>
+        <div className="science-note">
+          <Icon name="shield" size={22}/>
+          <p><b>Transparência primeiro.</b> Use o produto somente conforme as instruções e advertências do rótulo.</p>
+          <div className="science-sources"><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2529384/" target="_blank" rel="noreferrer">Estudo botânico</a><a href="https://www.gov.br/anvisa/pt-br/assuntos/fiscalizacao-e-monitoramento/propaganda/propaganda" target="_blank" rel="noreferrer">Regras da Anvisa</a></div>
+        </div>
       </div>
     </section>
   );
@@ -222,17 +252,18 @@ function Quality() {
   return (
     <section className="quality" id="qualidade">
       <div className="container quality-grid">
-        <div className="quality-seal" aria-hidden="true"><svg viewBox="0 0 240 240"><defs><path id="circleText" d="M120,120 m-88,0 a88,88 0 1,1 176,0 a88,88 0 1,1 -176,0"/></defs><text><textPath href="#circleText">RUBEE APIS • ORIGEM E TRANSPARÊNCIA • </textPath></text><path d="M120 72c16 13 25 28 25 44a25 25 0 1 1-50 0c0-16 9-31 25-44Z"/><path d="m108 118 8 8 17-19"/></svg></div>
+        <div className="quality-seal" aria-hidden="true"><svg viewBox="0 0 240 240"><defs><path id="circleText" d="M120,120 m-88,0 a88,88 0 1,1 176,0 a88,88 0 1,1 -176,0"/></defs><text><textPath href="#circleText">RUBEE APIS • S.I.F. 3698 • INSPEÇÃO FEDERAL • </textPath></text><path d="M120 72c16 13 25 28 25 44a25 25 0 1 1-50 0c0-16 9-31 25-44Z"/><path d="m108 118 8 8 17-19"/></svg></div>
         <div className="quality-copy">
           <p className="section-kicker section-kicker--light">Escolha consciente</p>
-          <h2>Confiança também<br/><em>faz parte da fórmula.</em></h2>
-          <p>Da seleção da matéria-prima ao envase, a informação clara ajuda você a fazer uma escolha segura e consciente.</p>
+          <h2>Inspeção e informação<br/><em>fazem parte da escolha.</em></h2>
+          <p>A embalagem exibe o selo S.I.F. 3698. Vinculado ao DIPOA/MAPA, o Serviço de Inspeção Federal fiscaliza produtos de origem animal destinados aos mercados interno e externo.</p>
           <div className="quality-points">
-            <span><Icon name="check" size={17}/> Informações claras no rótulo</span>
+            <span><Icon name="check" size={17}/> S.I.F. 3698 exibido na embalagem</span>
+            <span><Icon name="check" size={17}/> Inspeção federal de produto apícola</span>
             <span><Icon name="check" size={17}/> Lote e validade identificados</span>
-            <span><Icon name="check" size={17}/> Embalagem pensada para proteção</span>
             <span><Icon name="check" size={17}/> Modo de uso indicado no rótulo</span>
           </div>
+          <a className="text-link" href="https://www.gov.br/agricultura/pt-br/internacional/assuntos/inspecao/produtos-animal/sif/servico-de-inspecao-federal-sif" target="_blank" rel="noreferrer">Entenda o S.I.F. no MAPA <Icon name="arrow" size={18}/></a>
         </div>
       </div>
     </section>
@@ -318,6 +349,26 @@ function FAQ() {
   );
 }
 
+function PresenterSupport() {
+  return (
+    <section className="presenter-support">
+      <div className="presenter-support-photo">
+        <img src="/images/presenter-support.webp" alt="Apresentadora em composição editorial da Rubee Apis" width="1122" height="1408" loading="lazy" />
+      </div>
+      <div className="presenter-support-copy">
+        <p className="section-kicker">Rubee Apis por perto</p>
+        <h2>Clareza para escolher.<br/><em>Leveza para incluir.</em></h2>
+        <p>Antes da compra, conheça os detalhes do produto, consulte as orientações do rótulo e encontre respostas para as dúvidas mais comuns.</p>
+        <div className="presenter-support-points">
+          <span><Icon name="check" size={17}/> Informações essenciais reunidas</span>
+          <span><Icon name="check" size={17}/> Uso sempre orientado pelo rótulo</span>
+        </div>
+        <a className="text-link text-link--wine" href="#duvidas">Ver perguntas frequentes <Icon name="arrow" size={18}/></a>
+      </div>
+    </section>
+  );
+}
+
 function Closing() {
   return (
     <section className="closing">
@@ -354,10 +405,12 @@ function App() {
         <TrustStrip />
         <Benefits />
         <Origin />
+        <OriginScience />
         <Routine />
         <Quality />
         <Offer />
         <FAQ />
+        <PresenterSupport />
         <Closing />
       </main>
       <Footer />
