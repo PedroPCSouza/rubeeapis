@@ -2601,3 +2601,429 @@ footer {
     transition-duration: .01ms !important;
   }
 }
+
+/* Conversion, consistency and accessibility refinements */
+:root {
+  --muted: #625a54;
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 200;
+  top: 10px;
+  left: 12px;
+  padding: 12px 16px;
+  color: var(--wine-deep);
+  background: var(--gold-light);
+  font-size: 14px;
+  font-weight: 700;
+  transform: translateY(-150%);
+  transition: transform 160ms ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.site-header {
+  position: fixed;
+  background: rgba(31, 7, 12, .88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.nav-wrap {
+  height: 80px;
+}
+
+.brand-logo {
+  width: 92px;
+  border: 0;
+  box-shadow: none;
+}
+
+.nav-links {
+  font-size: 14px;
+}
+
+.section {
+  padding: 96px 0;
+}
+
+.eyebrow,
+.section-kicker {
+  font-size: 11px;
+}
+
+.hero-lead,
+.origin-copy > p:not(.section-kicker),
+.quality-copy > p:not(.section-kicker),
+.offer-story > p:not(.section-kicker),
+.routine-intro,
+.presenter-support-copy > p:not(.section-kicker) {
+  font-size: 16px;
+}
+
+.micro-trust {
+  font-size: 13px;
+}
+
+.trust-grid > div {
+  min-height: 92px;
+}
+
+.trust-grid span {
+  font-size: 12px;
+}
+
+.trust-grid b {
+  font-size: 14px;
+}
+
+.benefit-card {
+  min-height: 290px;
+}
+
+.benefit-card h3 {
+  font-size: 24px;
+}
+
+.benefit-card p {
+  font-size: 15px;
+}
+
+.offer-section {
+  background: var(--cream);
+}
+
+.offer-section::before {
+  background: var(--white);
+}
+
+.buy-card {
+  background: var(--white);
+}
+
+.offer-story li,
+.quality-points span {
+  font-size: 14px;
+}
+
+.offer-note > span,
+.secure-line,
+.checkout-message {
+  font-size: 12px !important;
+}
+
+.offer-note b {
+  font-size: 13px;
+}
+
+.quantity-row > span,
+.buy-price span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.quantity-control,
+.quantity-control button {
+  height: 44px;
+}
+
+.quantity-control button {
+  width: 44px;
+}
+
+.quantity-control output {
+  width: 42px;
+  font-size: 14px;
+}
+
+.origin,
+.origin-art,
+.origin-art > img {
+  min-height: 620px;
+}
+
+.origin-copy {
+  padding-block: 72px;
+}
+
+.specs span,
+.text-link {
+  font-size: 12px;
+}
+
+.specs b {
+  font-size: 14px;
+}
+
+.origin-science {
+  padding: 38px 0;
+  background: var(--white);
+  border-bottom: 1px solid var(--cream-deep);
+}
+
+.origin-science::before {
+  display: none;
+}
+
+.science-details {
+  border-top: 1px solid #d8caba;
+  border-bottom: 1px solid #d8caba;
+}
+
+.science-details summary {
+  display: flex;
+  min-height: 98px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 20px 3px;
+  color: var(--wine-deep);
+  cursor: pointer;
+  list-style: none;
+}
+
+.science-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.science-details summary > span {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--serif);
+  font-size: 27px;
+}
+
+.science-details summary small {
+  margin-bottom: 6px;
+  color: var(--wine);
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.science-details[open] summary svg {
+  transform: rotate(45deg);
+}
+
+.science-details-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px 50px;
+  padding: 8px 3px 32px;
+}
+
+.science-details-content p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.science-disclaimer {
+  padding-left: 22px;
+  border-left: 2px solid var(--gold);
+}
+
+.science-sources {
+  grid-column: 1 / -1;
+}
+
+.science-sources a {
+  font-size: 11px;
+}
+
+.routine {
+  padding-block: 82px;
+}
+
+.routine-grid {
+  gap: 70px;
+}
+
+.routine-visual {
+  height: 500px;
+}
+
+.step h3 {
+  font-size: 16px;
+}
+
+.step p {
+  font-size: 14px;
+}
+
+.sif-fact {
+  padding: 36px;
+  color: var(--cream);
+  border: 1px solid rgba(201, 161, 90, .42);
+}
+
+.sif-fact span,
+.sif-fact small {
+  display: block;
+  color: rgba(255, 255, 255, .55);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.sif-fact strong {
+  display: block;
+  margin: 18px 0 12px;
+  color: var(--gold-light);
+  font-family: var(--serif);
+  font-size: 46px;
+  font-weight: 400;
+}
+
+.sif-fact p {
+  margin-bottom: 24px;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.faq-intro > p:last-child,
+.faq-answer p {
+  font-size: 15px;
+}
+
+.faq-item button {
+  font-size: 19px;
+}
+
+.closing {
+  padding: 86px 0;
+}
+
+.closing .brand-logo {
+  width: 118px;
+}
+
+.footer-top .brand-logo {
+  width: 88px;
+}
+
+.footer-copy p {
+  font-size: 13px;
+}
+
+.footer-copy small,
+.footer-bottom {
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.footer-pending {
+  display: block;
+  margin-top: 6px;
+  color: var(--gold-light) !important;
+}
+
+@media (max-width: 900px) {
+  body.menu-open {
+    overflow: hidden;
+  }
+
+  .nav-links {
+    top: 80px;
+  }
+
+  .science-details-content {
+    grid-template-columns: 1fr;
+  }
+
+  .science-sources {
+    grid-column: auto;
+  }
+
+  .quality-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .quality-copy {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .section {
+    padding: 68px 0;
+  }
+
+  .nav-wrap {
+    height: 72px;
+  }
+
+  .site-header .brand-logo {
+    width: 76px;
+  }
+
+  .nav-links {
+    top: 72px;
+  }
+
+  .hero-lead,
+  .origin-copy > p:not(.section-kicker),
+  .quality-copy > p:not(.section-kicker),
+  .offer-story > p:not(.section-kicker),
+  .routine-intro {
+    font-size: 16px;
+  }
+
+  .micro-trust {
+    font-size: 12px;
+  }
+
+  .trust-grid span,
+  .trust-grid b {
+    font-size: 12px;
+  }
+
+  .benefit-card p,
+  .science-details-content p,
+  .step p,
+  .faq-answer p,
+  .faq-intro > p:last-child {
+    font-size: 15px;
+  }
+
+  .origin,
+  .origin-art,
+  .origin-art > img {
+    min-height: 500px;
+  }
+
+  .science-details summary > span {
+    font-size: 22px;
+  }
+
+  .routine {
+    padding-block: 64px;
+  }
+
+  .routine-visual {
+    height: 440px;
+  }
+
+  .sif-fact {
+    padding: 28px 24px;
+  }
+
+  .mobile-buy small,
+  .mobile-buy b {
+    font-size: 12px;
+  }
+
+  .footer-copy small,
+  .footer-bottom {
+    font-size: 12px;
+  }
+}

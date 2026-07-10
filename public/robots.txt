@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rubeeapis.pp-souzac.workers.dev/sitemap.xml
+

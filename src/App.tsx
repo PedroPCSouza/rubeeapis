@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const PRICE = 119.9;
 const checkoutBaseUrl = import.meta.env.VITE_CHECKOUT_URL?.trim();
@@ -47,22 +47,22 @@ function Icon({ name, size = 22 }: { name: IconName; size?: number }) {
 function BrandMark() {
   return (
     <a className="brand" href="#inicio" aria-label="Rubee Apis, voltar ao início">
-      <img className="brand-logo" src="/images/rubee-logo-official.webp" alt="Rubee Apis" width="343" height="271" />
+      <img className="brand-logo" src="/images/rubee-logo-white-v2.png" alt="Rubee Apis" width="343" height="271" />
     </a>
   );
 }
 
 const benefits = [
-  { icon: "drop" as const, number: "01", title: "Praticidade todos os dias", text: "O frasco conta-gotas torna o uso simples e controlado, em casa ou onde a sua rotina levar." },
-  { icon: "leaf" as const, number: "02", title: "Origem brasileira", text: "Produzido a partir de própolis vermelha, um ingrediente natural de origem apícola brasileira." },
-  { icon: "spark" as const, number: "03", title: "Apresentação premium", text: "Frasco protegido e uma experiência elegante, pensada para transformar o cuidado em ritual." },
-  { icon: "shield" as const, number: "04", title: "Escolha transparente", text: "Composição, procedência, modo de uso e fabricação apresentados com clareza no rótulo." },
+  { icon: "drop" as const, number: "01", title: "Conta-gotas prático", text: "O conta-gotas facilita a aplicação da quantidade indicada pelo fabricante no rótulo." },
+  { icon: "leaf" as const, number: "02", title: "Origem brasileira", text: "Própolis vermelha de origem apícola brasileira, associada a ecossistemas costeiros." },
+  { icon: "shield" as const, number: "03", title: "Inspeção federal", text: "A embalagem apresenta a identificação S.I.F. 3698 para o estabelecimento produtor." },
+  { icon: "bottle" as const, number: "04", title: "Produto identificado", text: "Frasco de 30 ml e embalagem individual com lote, validade e orientações do fabricante." },
 ];
 
 const faqs = [
   { q: "O que é a Rubee Apis?", a: "É um extrato de própolis vermelha brasileira apresentado em frasco conta-gotas de 30 ml." },
   { q: "Como devo utilizar?", a: "Utilize somente conforme as instruções presentes no rótulo do produto. Não substitua as orientações do fabricante por recomendações encontradas na internet." },
-  { q: "O produto contém álcool?", a: "A formulação e a graduação alcoólica, quando aplicável, devem ser verificadas diretamente no rótulo da unidade recebida." },
+  { q: "O produto contém álcool?", a: "A formulação e a graduação alcoólica precisam ser confirmadas na documentação aprovada do produto. Essa informação será publicada antes da abertura das vendas online." },
   { q: "Qual é o prazo de entrega?", a: "O prazo e as modalidades de envio são calculados no checkout a partir do CEP informado." },
   { q: "Como acompanho meu pedido?", a: "Quando a modalidade de entrega escolhida oferecer rastreamento, o código ou link será enviado pelo canal cadastrado durante a compra." },
   { q: "A compra é segura?", a: "O checkout é processado em ambiente protegido pela plataforma de pagamento configurada pela Rubee Apis." },
@@ -70,25 +70,44 @@ const faqs = [
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const close = () => setMenuOpen(false);
-    window.addEventListener("resize", close);
-    return () => window.removeEventListener("resize", close);
-  }, []);
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && menuOpen) {
+        setMenuOpen(false);
+        menuButtonRef.current?.focus();
+      }
+    };
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target as Node;
+      if (menuOpen && !menuRef.current?.contains(target) && !menuButtonRef.current?.contains(target)) setMenuOpen(false);
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.body.classList.toggle("menu-open", menuOpen);
+    if (menuOpen) menuRef.current?.querySelector<HTMLAnchorElement>("a")?.focus();
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.body.classList.remove("menu-open");
+    };
+  }, [menuOpen]);
 
   return (
     <header className="site-header">
       <div className="container nav-wrap">
         <BrandMark />
-        <nav className={menuOpen ? "nav-links is-open" : "nav-links"} aria-label="Navegação principal">
-          <a href="#beneficios" onClick={() => setMenuOpen(false)}>Benefícios</a>
+        <nav ref={menuRef} id="main-navigation" className={menuOpen ? "nav-links is-open" : "nav-links"} aria-label="Navegação principal">
+          <a href="#beneficios" onClick={() => setMenuOpen(false)}>Diferenciais</a>
+          <a href="#comprar" onClick={() => setMenuOpen(false)}>Produto</a>
           <a href="#origem" onClick={() => setMenuOpen(false)}>Origem</a>
-          <a href="#qualidade" onClick={() => setMenuOpen(false)}>Qualidade</a>
+          <a href="#como-usar" onClick={() => setMenuOpen(false)}>Como usar</a>
           <a href="#duvidas" onClick={() => setMenuOpen(false)}>Dúvidas</a>
-          <a className="nav-buy" href="#comprar" onClick={() => setMenuOpen(false)}>Comprar agora <Icon name="arrow" size={17}/></a>
+          <a className="nav-buy" href="#comprar" onClick={() => setMenuOpen(false)}>Comprar <Icon name="arrow" size={17}/></a>
         </nav>
-        <button className="menu-button" type="button" onClick={() => setMenuOpen((value) => !value)} aria-expanded={menuOpen} aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}>
+        <button ref={menuButtonRef} className="menu-button" type="button" onClick={() => setMenuOpen((value) => !value)} aria-expanded={menuOpen} aria-controls="main-navigation" aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}>
           <Icon name={menuOpen ? "x" : "menu"} />
         </button>
       </div>
@@ -107,13 +126,13 @@ function Hero() {
       <div className="container hero-grid">
         <div className="hero-copy">
           <p className="eyebrow"><span /> Extrato de própolis vermelha · 30 ml</p>
-          <h1>A força da natureza <em>em cada gota.</em></h1>
-          <p className="hero-lead">Própolis vermelha brasileira em uma apresentação premium, prática e fácil de incluir na sua rotina.</p>
+          <h1>Própolis vermelha <em>brasileira em gotas.</em></h1>
+          <p className="hero-lead">Extrato de própolis vermelha em frasco conta-gotas de 30 ml, com origem brasileira e informações de uso indicadas no rótulo.</p>
           <div className="hero-purchase">
-            <div className="hero-price"><span>por apenas</span><strong>R$ 119<sup>,90</sup></strong></div>
-            <a className="button button--gold" href="#comprar">Comprar agora <Icon name="arrow" size={19}/></a>
+            <div className="hero-price"><span>1 unidade</span><strong>R$ 119<sup>,90</sup></strong></div>
+            <a className="button button--gold" href="#comprar">Comprar Rubee Apis <Icon name="arrow" size={19}/></a>
           </div>
-          <div className="micro-trust"><span><Icon name="lock" size={15}/> Compra em ambiente protegido</span><span><Icon name="truck" size={17}/> Entrega calculada pelo CEP</span></div>
+          <div className="micro-trust"><span><Icon name="shield" size={15}/> S.I.F. 3698 na embalagem</span><span><Icon name="bottle" size={17}/> Frasco conta-gotas · 30 ml</span></div>
         </div>
         <div className="hero-side-note" aria-hidden="true"><span>01</span><i /> <p>NATURALMENTE<br/>BRASILEIRA</p></div>
       </div>
@@ -127,9 +146,9 @@ function TrustStrip() {
     <section className="trust-strip" aria-label="Diferenciais da compra">
       <div className="container trust-grid">
         <div><Icon name="leaf"/><span><b>Origem</b>Própolis vermelha brasileira</span></div>
-        <div><Icon name="bottle"/><span><b>Praticidade</b>Frasco conta-gotas de 30 ml</span></div>
-        <div><Icon name="lock"/><span><b>Segurança</b>Pagamento em ambiente protegido</span></div>
-        <div><Icon name="truck"/><span><b>Entrega</b>Opções informadas no checkout</span></div>
+        <div><Icon name="bottle"/><span><b>Conteúdo</b>Frasco conta-gotas de 30 ml</span></div>
+        <div><Icon name="shield"/><span><b>Inspeção</b>S.I.F. 3698 exibido no rótulo</span></div>
+        <div><Icon name="check"/><span><b>Informação</b>Uso conforme orientações do rótulo</span></div>
       </div>
     </section>
   );
@@ -140,8 +159,8 @@ function Benefits() {
     <section className="section benefits" id="beneficios">
       <div className="container">
         <div className="section-heading">
-          <div><p className="section-kicker">Feita para o seu ritmo</p><h2>Um cuidado natural que<br/><em>acompanha a rotina.</em></h2></div>
-          <p>Mais que um frasco: uma experiência que une origem, praticidade e beleza em todos os detalhes.</p>
+          <div><p className="section-kicker">Diferenciais do produto</p><h2>Por que escolher<br/><em>Rubee Apis?</em></h2></div>
+          <p>Características objetivas para entender o que você recebe antes de decidir pela compra.</p>
         </div>
         <div className="benefit-grid">
           {benefits.map((benefit) => (
@@ -184,34 +203,16 @@ function Origin() {
 
 function OriginScience() {
   return (
-    <section className="section origin-science" id="ciencia">
+    <section className="origin-science" id="ciencia">
       <div className="container">
-        <div className="section-heading">
-          <div><p className="section-kicker">Origem & pesquisa</p><h2>O que a ciência<br/><em>ajuda a explicar.</em></h2></div>
-          <p>Informação científica apresentada com responsabilidade: contexto sobre a matéria-prima, sem transformar pesquisa em promessa terapêutica.</p>
-        </div>
-        <div className="science-grid">
-          <article className="science-card">
-            <span>01</span><div className="science-card-icon"><Icon name="leaf"/></div>
-            <h3>Uma origem costeira</h3>
-            <p>Estudos identificam a <i>Dalbergia ecastophyllum</i>, conhecida como rabo-de-bugio, como uma das principais fontes botânicas da própolis vermelha brasileira.</p>
-          </article>
-          <article className="science-card">
-            <span>02</span><div className="science-card-icon"><Icon name="spark"/></div>
-            <h3>Composição singular</h3>
-            <p>A literatura descreve isoflavonoides e outros compostos fenólicos. A composição pode variar conforme origem, safra e processo de extração.</p>
-          </article>
-          <article className="science-card">
-            <span>03</span><div className="science-card-icon"><Icon name="shield"/></div>
-            <h3>Ciência com responsabilidade</h3>
-            <p>Resultados de laboratório não comprovam, por si só, benefícios clínicos deste produto. Por isso, a Rubee Apis não promete prevenir, tratar ou curar doenças.</p>
-          </article>
-        </div>
-        <div className="science-note">
-          <Icon name="shield" size={22}/>
-          <p><b>Transparência primeiro.</b> Use o produto somente conforme as instruções e advertências do rótulo.</p>
-          <div className="science-sources"><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2529384/" target="_blank" rel="noreferrer">Estudo botânico</a><a href="https://www.gov.br/anvisa/pt-br/assuntos/fiscalizacao-e-monitoramento/propaganda/propaganda" target="_blank" rel="noreferrer">Regras da Anvisa</a></div>
-        </div>
+        <details className="science-details">
+          <summary><span><small>Origem & pesquisa</small>Entenda a própolis vermelha brasileira</span><Icon name="plus" size={21}/></summary>
+          <div className="science-details-content">
+            <p>Estudos identificam relação com fontes botânicas costeiras, incluindo a <i>Dalbergia ecastophyllum</i>, conhecida como rabo-de-bugio. A literatura descreve isoflavonoides e compostos fenólicos, cuja composição pode variar conforme origem, safra e extração.</p>
+            <p className="science-disclaimer">Resultados laboratoriais não comprovam benefícios clínicos deste produto. A Rubee Apis não promete prevenir, tratar ou curar doenças.</p>
+            <div className="science-sources"><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2529384/" target="_blank" rel="noreferrer">Estudo botânico</a><a href="https://www.gov.br/anvisa/pt-br/assuntos/fiscalizacao-e-monitoramento/propaganda/propaganda" target="_blank" rel="noreferrer">Regras da Anvisa</a></div>
+          </div>
+        </details>
       </div>
     </section>
   );
@@ -219,18 +220,18 @@ function OriginScience() {
 
 function Routine() {
   const steps = [
-    ["01", "Abra o frasco", "Desrosqueie cuidadosamente o conta-gotas."],
-    ["02", "Siga o rótulo", "Utilize somente a quantidade indicada pelo fabricante."],
-    ["03", "Mantenha o cuidado", "Conserve o produto nas condições indicadas na embalagem."],
+    ["01", "Consulte o rótulo", "Confira a quantidade, as restrições e as advertências indicadas pelo fabricante."],
+    ["02", "Use conforme a indicação", "O conta-gotas facilita a aplicação da quantidade informada no rótulo."],
+    ["03", "Conserve corretamente", "Mantenha o frasco nas condições descritas na embalagem."],
   ];
 
   return (
-    <section className="section routine">
+    <section className="section routine" id="como-usar">
       <div className="container routine-grid">
         <div className="routine-copy">
-          <p className="section-kicker">Seu ritual Rubee</p>
-          <h2>Simples de incluir.<br/><em>Fácil de manter.</em></h2>
-          <p className="routine-intro">Um pequeno gesto pode marcar um momento só seu. Siga sempre as instruções do rótulo.</p>
+          <p className="section-kicker">Antes de usar</p>
+          <h2>O rótulo é a<br/><em>referência principal.</em></h2>
+          <p className="routine-intro">A formulação completa e o modo de uso aprovado serão publicados nesta página antes da abertura das vendas online.</p>
           <div className="steps">
             {steps.map(([number, title, text]) => <div className="step" key={number}><span>{number}</span><div><h3>{title}</h3><p>{text}</p></div></div>)}
           </div>
@@ -252,10 +253,15 @@ function Quality() {
   return (
     <section className="quality" id="qualidade">
       <div className="container quality-grid">
-        <div className="quality-seal" aria-hidden="true"><svg viewBox="0 0 240 240"><defs><path id="circleText" d="M120,120 m-88,0 a88,88 0 1,1 176,0 a88,88 0 1,1 -176,0"/></defs><text><textPath href="#circleText">RUBEE APIS • S.I.F. 3698 • INSPEÇÃO FEDERAL • </textPath></text><path d="M120 72c16 13 25 28 25 44a25 25 0 1 1-50 0c0-16 9-31 25-44Z"/><path d="m108 118 8 8 17-19"/></svg></div>
+        <div className="sif-fact">
+          <span>Identificação exibida na embalagem</span>
+          <strong>S.I.F. 3698</strong>
+          <p>Estabelecimento sob Serviço de Inspeção Federal.</p>
+          <small>Fabricante e município/UF: dados pendentes de confirmação documental.</small>
+        </div>
         <div className="quality-copy">
-          <p className="section-kicker section-kicker--light">Escolha consciente</p>
-          <h2>Inspeção e informação<br/><em>fazem parte da escolha.</em></h2>
+          <p className="section-kicker section-kicker--light">Informação do produto</p>
+          <h2>Saiba exatamente<br/><em>o que está comprando.</em></h2>
           <p>A embalagem exibe o selo S.I.F. 3698. Vinculado ao DIPOA/MAPA, o Serviço de Inspeção Federal fiscaliza produtos de origem animal destinados aos mercados interno e externo.</p>
           <div className="quality-points">
             <span><Icon name="check" size={17}/> S.I.F. 3698 exibido na embalagem</span>
@@ -293,9 +299,9 @@ function Offer() {
     <section className="section offer-section" id="comprar">
       <div className="container offer-grid">
         <div className="offer-story">
-          <p className="section-kicker">A sua Rubee Apis</p>
-          <h2>Um ritual pequeno.<br/><em>Uma escolha especial.</em></h2>
-          <p>Receba em casa uma apresentação cuidadosamente criada para preservar e valorizar a própolis vermelha brasileira.</p>
+          <p className="section-kicker">Oferta</p>
+          <h2>Sua Rubee Apis<br/><em>por R$ 119,90.</em></h2>
+          <p>Você recebe um frasco conta-gotas de 30 ml e sua embalagem individual Rubee Apis, com lote, validade e orientações informados no rótulo.</p>
           <ul>
             <li><Icon name="check" size={17}/> 1 frasco conta-gotas de 30 ml</li>
             <li><Icon name="check" size={17}/> Embalagem individual Rubee Apis</li>
@@ -309,8 +315,8 @@ function Offer() {
           <div className="buy-info">
             <p>Extrato de Própolis Vermelha</p>
             <div className="buy-price"><span>Total</span><strong>{total.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</strong></div>
-            <div className="quantity-row">
-              <label htmlFor="quantity">Quantidade</label>
+            <div className="quantity-row" role="group" aria-labelledby="quantity-label">
+              <span id="quantity-label">Quantidade</span>
               <div className="quantity-control">
                 <button type="button" onClick={() => setQuantity((value) => Math.max(1, value - 1))} aria-label="Diminuir quantidade"><Icon name="minus" size={17}/></button>
                 <output id="quantity" aria-live="polite">{quantity}</output>
@@ -318,9 +324,9 @@ function Offer() {
               </div>
             </div>
             {checkoutUrl ? (
-              <a className="button button--wine button--full" href={checkoutUrl}>Ir para o checkout <Icon name="arrow" size={19}/></a>
+              <a className="button button--wine button--full" href={checkoutUrl}>Comprar Rubee Apis <Icon name="arrow" size={19}/></a>
             ) : (
-              <button className="button button--wine button--full" type="button" onClick={handleCheckout}>Comprar agora <Icon name="arrow" size={19}/></button>
+              <button className="button button--wine button--full" type="button" onClick={handleCheckout}>Vendas online em breve <Icon name="arrow" size={19}/></button>
             )}
             {checkoutMessage && <p className="checkout-message" role="status">As vendas online serão abertas em breve.</p>}
             <p className="secure-line"><Icon name="lock" size={14}/> Compra processada em ambiente seguro</p>
@@ -349,35 +355,15 @@ function FAQ() {
   );
 }
 
-function PresenterSupport() {
-  return (
-    <section className="presenter-support">
-      <div className="presenter-support-photo">
-        <img src="/images/presenter-support.webp" alt="Apresentadora em composição editorial da Rubee Apis" width="1122" height="1408" loading="lazy" />
-      </div>
-      <div className="presenter-support-copy">
-        <p className="section-kicker">Rubee Apis por perto</p>
-        <h2>Clareza para escolher.<br/><em>Leveza para incluir.</em></h2>
-        <p>Antes da compra, conheça os detalhes do produto, consulte as orientações do rótulo e encontre respostas para as dúvidas mais comuns.</p>
-        <div className="presenter-support-points">
-          <span><Icon name="check" size={17}/> Informações essenciais reunidas</span>
-          <span><Icon name="check" size={17}/> Uso sempre orientado pelo rótulo</span>
-        </div>
-        <a className="text-link text-link--wine" href="#duvidas">Ver perguntas frequentes <Icon name="arrow" size={18}/></a>
-      </div>
-    </section>
-  );
-}
-
 function Closing() {
   return (
     <section className="closing">
       <div className="closing-pattern" />
       <div className="container closing-inner">
         <BrandMark />
-        <p>Própolis vermelha brasileira · 30 ml</p>
-        <h2>Leve a força da natureza<br/><em>para a sua rotina.</em></h2>
-        <a className="button button--gold" href="#comprar">Quero minha Rubee Apis <Icon name="arrow" size={19}/></a>
+        <p>Rubee Apis · Própolis vermelha brasileira · 30 ml</p>
+        <h2>1 unidade por<br/><em>R$ 119,90.</em></h2>
+        <a className="button button--gold" href="#comprar">Comprar Rubee Apis <Icon name="arrow" size={19}/></a>
       </div>
     </section>
   );
@@ -388,7 +374,7 @@ function Footer() {
     <footer>
       <div className="container footer-top">
         <BrandMark />
-        <div className="footer-copy"><p>Extrato de Própolis Vermelha Rubee Apis · 30 ml</p><small>Use conforme as instruções do rótulo. Este produto não é medicamento.</small></div>
+        <div className="footer-copy"><p>Extrato de Própolis Vermelha Rubee Apis · 30 ml</p><small>Use conforme as instruções do rótulo. Este produto não é medicamento.</small><small className="footer-pending">Dados empresariais, atendimento e políticas serão publicados antes da abertura das vendas.</small></div>
         <a href="#inicio" className="back-top" aria-label="Voltar ao topo"><Icon name="arrow" size={18}/></a>
       </div>
       <div className="container footer-bottom"><span>© {new Date().getFullYear()} Rubee Apis. Todos os direitos reservados.</span><span>Produto brasileiro</span></div>
@@ -399,22 +385,22 @@ function Footer() {
 function App() {
   return (
     <>
+      <a className="skip-link" href="#conteudo">Pular para o conteúdo</a>
       <Header />
-      <main>
+      <main id="conteudo">
         <Hero />
         <TrustStrip />
         <Benefits />
+        <Offer />
         <Origin />
+        <Quality />
         <OriginScience />
         <Routine />
-        <Quality />
-        <Offer />
         <FAQ />
-        <PresenterSupport />
         <Closing />
       </main>
       <Footer />
-      <a className="mobile-buy" href="#comprar"><span><small>A partir de</small>R$ 119,90</span><b>Comprar agora <Icon name="arrow" size={17}/></b></a>
+      <a className="mobile-buy" href="#comprar"><span><small>1 unidade</small>R$ 119,90</span><b>Comprar <Icon name="arrow" size={17}/></b></a>
     </>
   );
 }
