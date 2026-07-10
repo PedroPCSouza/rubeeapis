@@ -183,6 +183,29 @@ h3 {
     linear-gradient(116deg, #2b0e14 0%, #3a1018 54%, #260a10 100%);
 }
 
+.hero-photo {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+}
+
+.hero-photo::after {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(31, 7, 11, .96) 0%, rgba(39, 8, 13, .88) 34%, rgba(39, 8, 13, .18) 67%, rgba(20, 4, 7, .08) 100%),
+    linear-gradient(0deg, rgba(27, 5, 9, .44), transparent 48%);
+  content: "";
+}
+
+.hero-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
 .hero::before {
   position: absolute;
   top: -280px;
@@ -914,17 +937,56 @@ h2 em {
   position: relative;
   min-height: 740px;
   overflow: hidden;
-  background:
-    linear-gradient(0deg, rgba(30, 9, 14, .62), transparent 62%),
-    radial-gradient(circle at 65% 28%, #a94e4b, #6a1f2b 35%, #310d15 80%);
+  background: var(--wine-deep);
+}
+
+.origin-art > img {
+  width: 100%;
+  height: 100%;
+  min-height: 740px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.origin-art::before {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(30, 9, 14, .72), transparent 48%);
+  content: "";
+  pointer-events: none;
 }
 
 .origin-art::after {
   position: absolute;
+  z-index: 2;
   inset: 0;
   opacity: .16;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.6' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   content: "";
+  pointer-events: none;
+}
+
+.origin-photo-caption {
+  position: absolute;
+  z-index: 3;
+  right: 32px;
+  bottom: 30px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 16px;
+  color: var(--wine-deep);
+  background: rgba(245, 239, 228, .92);
+  box-shadow: 0 14px 35px rgba(22, 4, 8, .28);
+  font-size: 8px;
+  letter-spacing: .08em;
+  line-height: 1.45;
+  text-transform: uppercase;
+}
+
+.origin-photo-caption b {
+  font-size: 9px;
 }
 
 .sun-disc {
@@ -1126,6 +1188,43 @@ h2 em {
   font-size: 190px;
   line-height: 1;
   content: "R";
+}
+
+.presenter-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 22%;
+  filter: saturate(.92) contrast(1.02);
+}
+
+.routine-visual::after {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(43, 14, 20, .38), transparent 36%);
+  content: "";
+  pointer-events: none;
+}
+
+.presenter-product-card {
+  position: absolute;
+  z-index: 5;
+  top: 210px;
+  right: 25px;
+  width: 138px;
+  height: 184px;
+  overflow: hidden;
+  background: #e7e7e9;
+  border: 5px solid var(--cream);
+  box-shadow: 0 20px 45px rgba(32, 7, 12, .28);
+  transform: rotate(2deg);
+}
+
+.presenter-product-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .routine-ring {
@@ -1364,7 +1463,14 @@ h2 em {
   position: relative;
   height: 245px;
   overflow: hidden;
-  background: radial-gradient(circle at 50% 48%, #b45f52, #581b26 52%, #2d0d14);
+  background: #e8e8ea;
+}
+
+.buy-product > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
 }
 
 .buy-product .product-visual {
@@ -1763,6 +1869,16 @@ footer {
     bottom: -30px;
   }
 
+  .hero-photo img {
+    object-position: 66% center;
+  }
+
+  .hero-photo::after {
+    background:
+      linear-gradient(90deg, rgba(31, 7, 11, .95) 0%, rgba(39, 8, 13, .75) 47%, rgba(25, 5, 9, .12) 100%),
+      linear-gradient(0deg, rgba(27, 5, 9, .5), transparent 45%);
+  }
+
   .scroll-cue {
     display: none;
   }
@@ -1801,6 +1917,10 @@ footer {
   }
 
   .origin-art {
+    min-height: 620px;
+  }
+
+  .origin-art > img {
     min-height: 620px;
   }
 
@@ -1939,6 +2059,20 @@ footer {
     transform-origin: center;
   }
 
+  .hero-photo {
+    top: 295px;
+  }
+
+  .hero-photo img {
+    object-position: 72% center;
+  }
+
+  .hero-photo::after {
+    background:
+      linear-gradient(180deg, #3a0f17 0%, rgba(53, 13, 20, .78) 20%, rgba(37, 7, 12, .08) 53%, rgba(24, 4, 8, .25) 100%),
+      linear-gradient(90deg, rgba(32, 6, 10, .34), transparent 65%);
+  }
+
   .trust-grid {
     width: 100%;
   }
@@ -1995,6 +2129,15 @@ footer {
     min-height: 500px;
   }
 
+  .origin-art > img {
+    min-height: 500px;
+  }
+
+  .origin-photo-caption {
+    right: 17px;
+    bottom: 17px;
+  }
+
   .sun-disc {
     top: 75px;
     width: 245px;
@@ -2041,6 +2184,14 @@ footer {
   .routine-visual .product-visual {
     top: -10px;
     transform: translateX(-50%) scale(.68);
+  }
+
+  .presenter-product-card {
+    top: 185px;
+    right: 14px;
+    width: 102px;
+    height: 136px;
+    border-width: 4px;
   }
 
   .routine-ring {

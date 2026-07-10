@@ -57,43 +57,6 @@ function BrandMark() {
   );
 }
 
-function ProductVisual({ compact = false }: { compact?: boolean }) {
-  return (
-    <div className={`product-visual ${compact ? "product-visual--compact" : ""}`} aria-label="Representação ilustrativa do frasco e embalagem Rubee Apis">
-      <div className="visual-orbit visual-orbit--one" />
-      <div className="visual-orbit visual-orbit--two" />
-      <span className="pollen pollen--1" />
-      <span className="pollen pollen--2" />
-      <span className="pollen pollen--3" />
-      <span className="pollen pollen--4" />
-      <div className="product-box" aria-hidden="true">
-        <div className="box-top" />
-        <div className="box-shine" />
-        <div className="box-brand"><b>Rubee</b><span>APIS</span></div>
-        <div className="box-rule" />
-        <div className="box-title">EXTRATO DE<br/>PRÓPOLIS<br/><em>vermelha</em></div>
-        <div className="box-seal">ORIGEM<br/>BRASILEIRA</div>
-        <div className="box-size">30 ml</div>
-      </div>
-      <div className="bottle" aria-hidden="true">
-        <div className="dropper-cap"><span /></div>
-        <div className="bottle-neck" />
-        <div className="bottle-glass">
-          <div className="glass-glow" />
-          <div className="bottle-label">
-            <div className="label-brand"><b>Rubee</b><span>APIS</span></div>
-            <i />
-            <strong>PRÓPOLIS<br/>VERMELHA</strong>
-            <small>EXTRATO · 30 ml</small>
-          </div>
-        </div>
-      </div>
-      <div className="visual-shadow" />
-      {!compact && <div className="origin-stamp"><Icon name="leaf" size={18}/><span>Origem<br/><b>brasileira</b></span></div>}
-    </div>
-  );
-}
-
 const benefits = [
   { icon: "drop" as const, number: "01", title: "Praticidade todos os dias", text: "O frasco conta-gotas torna o uso simples e controlado, em casa ou onde a sua rotina levar." },
   { icon: "leaf" as const, number: "02", title: "Origem brasileira", text: "Produzido a partir de própolis vermelha, um ingrediente natural de origem apícola brasileira." },
@@ -141,6 +104,9 @@ function Header() {
 function Hero() {
   return (
     <section className="hero" id="inicio">
+      <div className="hero-photo" aria-hidden="true">
+        <img src="/images/hero-product.webp" alt="" width="1672" height="939" fetchPriority="high" />
+      </div>
       <div className="hero-noise" />
       <div className="hero-glow" />
       <div className="container hero-grid">
@@ -154,7 +120,6 @@ function Hero() {
           </div>
           <div className="micro-trust"><span><Icon name="lock" size={15}/> Compra em ambiente protegido</span><span><Icon name="truck" size={17}/> Entrega calculada pelo CEP</span></div>
         </div>
-        <ProductVisual />
         <div className="hero-side-note" aria-hidden="true"><span>01</span><i /> <p>NATURALMENTE<br/>BRASILEIRA</p></div>
       </div>
       <div className="scroll-cue" aria-hidden="true"><span>Descubra</span><i /></div>
@@ -202,13 +167,9 @@ function Benefits() {
 function Origin() {
   return (
     <section className="origin" id="origem">
-      <div className="origin-art" aria-hidden="true">
-        <div className="sun-disc" />
-        <svg className="botanical" viewBox="0 0 620 760" fill="none">
-          <path d="M68 740c184-259 290-379 491-650" stroke="currentColor" strokeWidth="2"/>
-          <path d="M156 613c-96-13-129-83-119-155 87 11 143 55 119 155ZM266 466c-73-53-62-129-28-186 72 45 103 105 28 186ZM377 323c-47-76-9-143 42-187 51 67 60 132-42 187ZM251 482c96 5 136-61 135-134-87-4-147 34-135 134ZM363 335c89 18 141-37 154-107-82-20-147 7-154 107Z" stroke="currentColor" strokeWidth="1.6"/>
-        </svg>
-        <div className="origin-drop">R</div>
+      <div className="origin-art">
+        <img src="/images/product-nature.webp" alt="Frasco de extrato de própolis vermelha Rubee Apis em ambiente natural" width="387" height="516" loading="lazy" />
+        <div className="origin-photo-caption"><Icon name="leaf" size={16}/><span>Fotografia do<br/><b>produto real</b></span></div>
       </div>
       <div className="origin-copy">
         <p className="section-kicker section-kicker--light">Rara por natureza</p>
@@ -246,7 +207,10 @@ function Routine() {
         </div>
         <div className="routine-visual">
           <div className="routine-ring"><span>Ritual<br/>diário</span></div>
-          <ProductVisual compact />
+          <img className="presenter-photo" src="/images/presenter.webp" alt="Apresentadora Rubee Apis indicando o produto" width="1386" height="1848" loading="lazy" />
+          <div className="presenter-product-card" aria-hidden="true">
+            <img src="/images/product-packshot.webp" alt="" width="387" height="516" loading="lazy" />
+          </div>
           <div className="routine-quote"><Icon name="drop" size={18}/><p>Praticidade que<br/>cabe na rotina.</p></div>
         </div>
       </div>
@@ -310,7 +274,7 @@ function Offer() {
         </div>
         <div className="buy-card">
           <div className="buy-card-top"><span>Rubee Apis</span><span>30 ml</span></div>
-          <div className="buy-product"><ProductVisual compact /></div>
+          <div className="buy-product"><img src="/images/product-packshot.webp" alt="Frasco e embalagem do Extrato de Própolis Vermelha Rubee Apis" width="387" height="516" loading="lazy" /></div>
           <div className="buy-info">
             <p>Extrato de Própolis Vermelha</p>
             <div className="buy-price"><span>Total</span><strong>{total.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</strong></div>

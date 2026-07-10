@@ -41,10 +41,18 @@ npm run deploy
 
 ## Antes de colocar no ar
 
-- Substituir o mockup vetorial por fotografias oficiais do produto, se disponíveis.
+- Revisar e aprovar as fotografias do produto e da apresentadora antes da campanha final.
 - Configurar a URL real do checkout.
 - Conferir no rótulo: ingredientes, concentração, graduação alcoólica, advertências e modo de uso.
 - Confirmar regras comerciais de frete, rastreamento e suporte.
 - Adicionar política de privacidade, termos, dados da empresa e canal de atendimento.
 - Configurar domínio, analytics, Meta Pixel e eventos de conversão apenas com os identificadores oficiais.
 
+## Ativos fotográficos
+
+Os arquivos otimizados ficam em `public/images/`:
+
+- `hero-product.webp`: composição publicitária criada a partir das fotografias reais do produto.
+- `product-packshot.webp`: fotografia do frasco com a embalagem.
+- `product-nature.webp`: fotografia do frasco em ambiente natural.
+- `presenter.webp`: fotografia da apresentadora usada na seção de rotina.
