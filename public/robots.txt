@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://rubeeapis.pp-souzac.workers.dev/sitemap.xml
-
+Sitemap: https://rubeeapis.ppverde66.workers.dev/sitemap.xml

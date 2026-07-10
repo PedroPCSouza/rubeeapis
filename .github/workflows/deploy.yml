@@ -23,4 +23,4 @@ jobs:
           wranglerVersion: 4.110.0
           command: deploy
       - name: Validate deployment
-        run: curl --fail --retry 5 --retry-delay 5 https://rubeeapis.pp-souzac.workers.dev/
+        run: curl --fail --retry 5 --retry-delay 5 https://rubeeapis.ppverde66.workers.dev/
