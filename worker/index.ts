@@ -7,11 +7,37 @@
 
 interface Env {
   STRIPE_SECRET_KEY: string;
+  STRIPE_WEBHOOK_SECRET?: string;
+  STRIPE_PRICE_ID?: string;
   ASSETS: { fetch(request: Request): Promise<Response> };
 }
 
 const PRICE_CENTS = 11990; // R$ 119,90
 const PRODUCT_NAME = "Rubee Apis · Extrato de Própolis Vermelha 30 ml";
+
+function hex(buffer: ArrayBuffer) {
+  return Array.from(new Uint8Array(buffer), (byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+function safeEqual(left: string, right: string) {
+  if (left.length !== right.length) return false;
+  let mismatch = 0;
+  for (let index = 0; index < left.length; index += 1) mismatch |= left.charCodeAt(index) ^ right.charCodeAt(index);
+  return mismatch === 0;
+}
+
+async function verifyStripeSignature(payload: string, signatureHeader: string, secret: string) {
+  const parts = signatureHeader.split(",").map((part) => part.trim().split("="));
+  const timestamp = parts.find(([key]) => key === "t")?.[1];
+  const signatures = parts.filter(([key]) => key === "v1").map(([, value]) => value);
+  if (!timestamp || signatures.length === 0) return false;
+  const timestampNumber = Number(timestamp);
+  if (!Number.isFinite(timestampNumber) || Math.abs(Date.now() / 1000 - timestampNumber) > 300) return false;
+
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  const expected = hex(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(`${timestamp}.${payload}`)));
+  return signatures.some((signature) => safeEqual(signature, expected));
+}
 
 function stripeHeaders(secretKey: string) {
   return {
@@ -23,6 +49,28 @@ function stripeHeaders(secretKey: string) {
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
+
+    if (url.pathname === "/api/stripe-webhook" && request.method === "POST") {
+      if (!env.STRIPE_WEBHOOK_SECRET) return new Response("Webhook não configurado.", { status: 503 });
+      const signature = request.headers.get("stripe-signature");
+      const payload = await request.text();
+      if (!signature || !(await verifyStripeSignature(payload, signature, env.STRIPE_WEBHOOK_SECRET))) {
+        return new Response("Assinatura inválida.", { status: 400 });
+      }
+
+      const event = JSON.parse(payload) as {
+        id: string;
+        type: string;
+        data?: { object?: { id?: string; payment_status?: string; customer_details?: { email?: string }; metadata?: Record<string, string> } };
+      };
+      const session = event.data?.object;
+      if (event.type === "checkout.session.completed" || event.type === "checkout.session.async_payment_succeeded") {
+        console.log("Stripe checkout confirmed", { eventId: event.id, sessionId: session?.id, paymentStatus: session?.payment_status, email: session?.customer_details?.email, metadata: session?.metadata });
+      } else if (event.type === "checkout.session.async_payment_failed") {
+        console.warn("Stripe checkout failed", { eventId: event.id, sessionId: session?.id });
+      }
+      return Response.json({ received: true });
+    }
 
     if (url.pathname === "/api/checkout" && request.method === "POST") {
       if (!env.STRIPE_SECRET_KEY) {
@@ -47,12 +95,16 @@ export default {
         "shipping_address_collection[allowed_countries][0]": "BR",
         submit_type: "pay",
         "line_items[0][quantity]": String(quantity),
-        "line_items[0][price_data][currency]": "brl",
-        "line_items[0][price_data][unit_amount]": String(PRICE_CENTS),
-        "line_items[0][price_data][product_data][name]": PRODUCT_NAME,
         "metadata[product]": "rubee-apis-30ml",
         "metadata[quantity]": String(quantity),
       });
+      if (env.STRIPE_PRICE_ID) {
+        params.set("line_items[0][price]", env.STRIPE_PRICE_ID);
+      } else {
+        params.set("line_items[0][price_data][currency]", "brl");
+        params.set("line_items[0][price_data][unit_amount]", String(PRICE_CENTS));
+        params.set("line_items[0][price_data][product_data][name]", PRODUCT_NAME);
+      }
 
       try {
         const response = await fetch("https://api.stripe.com/v1/checkout/sessions", {
