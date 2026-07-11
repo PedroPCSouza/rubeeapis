@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 
 const PRICE = 119.9;
 const checkoutBaseUrl = import.meta.env.VITE_CHECKOUT_URL?.trim();
@@ -53,63 +53,27 @@ function BrandMark() {
 }
 
 const benefits = [
-  { icon: "drop" as const, number: "01", title: "Fácil de incluir", text: "10 gotinhas por dia, sem gosto forte e sem complicação." },
-  { icon: "leaf" as const, number: "02", title: "Brasileira na origem", text: "Própolis vermelha de origem apícola brasileira, apresentada com clareza e responsabilidade." },
-  { icon: "shield" as const, number: "03", title: "Clara para escolher", text: "Informações de uso, conservação, lote e validade reunidas na própria embalagem." },
-  { icon: "bottle" as const, number: "04", title: "Prática no dia a dia", text: "Uma apresentação compacta e fácil de manter por perto quando você precisar." },
+  { icon: "drop" as const, number: "01", title: "Simples de manter", text: "10 gotinhas por dia em um gesto rápido, fácil de repetir e de encaixar na rotina." },
+  { icon: "spark" as const, number: "02", title: "Sabor que não pesa", text: "Sabor suave, sem gosto forte, para tornar a experiência mais agradável todos os dias." },
+  { icon: "bottle" as const, number: "03", title: "Praticidade de verdade", text: "O conta-gotas ajuda a separar a quantidade do dia de forma simples e sem desperdício." },
+  { icon: "leaf" as const, number: "04", title: "Origem sem exageros", text: "Própolis vermelha brasileira apresentada com clareza para você escolher com mais confiança." },
 ];
 
 const faqs = [
-  { q: "O que é a Rubee Apis?", a: "É um extrato de própolis vermelha brasileira apresentado em frasco conta-gotas de 30 ml." },
-  { q: "Como devo utilizar?", a: "Utilize somente conforme as instruções presentes no rótulo do produto. Não substitua as orientações do fabricante por recomendações encontradas na internet." },
-  { q: "O produto contém álcool?", a: "A formulação e a graduação alcoólica precisam ser confirmadas na documentação aprovada do produto. Essa informação será publicada antes da abertura das vendas online." },
-  { q: "Qual é o prazo de entrega?", a: "O prazo e as modalidades de envio são calculados no checkout a partir do CEP informado." },
-  { q: "Como acompanho meu pedido?", a: "Quando a modalidade de entrega escolhida oferecer rastreamento, o código ou link será enviado pelo canal cadastrado durante a compra." },
-  { q: "A compra é segura?", a: "O checkout é processado em ambiente protegido pela plataforma de pagamento configurada pela Rubee Apis." },
+  { q: "O que é a Rubee Apis?", a: "É um extrato de própolis vermelha brasileira pensado para tornar essa escolha mais simples, agradável e prática no dia a dia." },
+  { q: "Como incluir no dia a dia?", a: "A indicação informada pela marca é de 10 gotinhas por dia. Use sempre conforme as orientações e advertências presentes no rótulo." },
+  { q: "O sabor é forte?", a: "A Rubee Apis tem sabor suave, pensado para uma experiência mais agradável e sem gosto forte." },
+  { q: "O que vem na compra?", a: "Você recebe uma unidade Rubee Apis de 30 ml com conta-gotas e sua embalagem individual." },
+  { q: "Como devo conservar?", a: "Siga as condições de conservação indicadas na embalagem e mantenha o produto em local adequado." },
+  { q: "Quando as vendas começam?", a: "A loja está em pré-lançamento. Use o botão “Quero ser avisado” para acompanhar a abertura das vendas." },
 ];
 
 function Header() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuButtonRef = useRef<HTMLButtonElement>(null);
-  const menuRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && menuOpen) {
-        setMenuOpen(false);
-        menuButtonRef.current?.focus();
-      }
-    };
-    const handlePointerDown = (event: PointerEvent) => {
-      const target = event.target as Node;
-      if (menuOpen && !menuRef.current?.contains(target) && !menuButtonRef.current?.contains(target)) setMenuOpen(false);
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    document.addEventListener("pointerdown", handlePointerDown);
-    document.body.classList.toggle("menu-open", menuOpen);
-    if (menuOpen) menuRef.current?.querySelector<HTMLAnchorElement>("a")?.focus();
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.removeEventListener("pointerdown", handlePointerDown);
-      document.body.classList.remove("menu-open");
-    };
-  }, [menuOpen]);
-
   return (
     <header className="site-header">
       <div className="container nav-wrap">
         <BrandMark />
-        <nav ref={menuRef} id="main-navigation" className={menuOpen ? "nav-links is-open" : "nav-links"} aria-label="Navegação principal">
-          <a href="#beneficios" onClick={() => setMenuOpen(false)}>Diferenciais</a>
-          <a href="#comprar" onClick={() => setMenuOpen(false)}>Produto</a>
-          <a href="#origem" onClick={() => setMenuOpen(false)}>Origem</a>
-          <a href="#como-usar" onClick={() => setMenuOpen(false)}>Como usar</a>
-          <a href="#duvidas" onClick={() => setMenuOpen(false)}>Dúvidas</a>
-          <a className="nav-buy" href="#comprar" onClick={() => setMenuOpen(false)}>Comprar <Icon name="arrow" size={17}/></a>
-        </nav>
-        <button ref={menuButtonRef} className="menu-button" type="button" onClick={() => setMenuOpen((value) => !value)} aria-expanded={menuOpen} aria-controls="main-navigation" aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}>
-          <Icon name={menuOpen ? "x" : "menu"} />
-        </button>
+        <a className="nav-buy header-primary-cta" href="#comprar">{checkoutBaseUrl ? "Comprar Rubee Apis" : "Quero ser avisado"} <Icon name="arrow" size={17}/></a>
       </div>
     </header>
   );
@@ -125,14 +89,14 @@ function Hero() {
       <div className="hero-glow" />
       <div className="container hero-grid">
         <div className="hero-copy">
-          <p className="eyebrow"><span /> Extrato de própolis vermelha · 30 ml</p>
-          <h1>Um cuidado simples <em>de continuar.</em></h1>
-          <p className="hero-lead">Rubee Apis reúne a origem brasileira da própolis vermelha e a praticidade do conta-gotas em uma escolha feita para acompanhar a vida real.</p>
+          <p className="eyebrow"><span /> Própolis vermelha brasileira</p>
+          <h1>Seu cuidado diário, <em>mais simples.</em></h1>
+          <p className="hero-lead">10 gotinhas por dia, sabor suave e a praticidade do conta-gotas para acompanhar sua rotina sem complicação.</p>
           <div className="hero-purchase">
             <div className="hero-price"><span>1 unidade</span><strong>R$ 119<sup>,90</sup></strong></div>
-            <a className="button button--gold" href="#comprar">Comprar Rubee Apis <Icon name="arrow" size={19}/></a>
+            <a className="button button--gold" href="#comprar">{checkoutBaseUrl ? "Comprar Rubee Apis" : "Quero ser avisado"} <Icon name="arrow" size={19}/></a>
           </div>
-          <div className="micro-trust"><span><Icon name="shield" size={15}/> S.I.F. 3698 na embalagem</span><span><Icon name="bottle" size={17}/> Frasco conta-gotas · 30 ml</span></div>
+          <div className="micro-trust"><span><Icon name="drop" size={15}/> 10 gotinhas por dia</span><span><Icon name="spark" size={17}/> Sabor suave</span></div>
         </div>
         <div className="hero-side-note" aria-hidden="true"><span>01</span><i /> <p>NATURALMENTE<br/>BRASILEIRA</p></div>
       </div>
@@ -145,10 +109,10 @@ function Identification() {
   return (
     <section className="section identification" aria-labelledby="identification-title">
       <div className="container identification-inner">
-        <p className="section-kicker">Feito para a vida real</p>
-        <h2 id="identification-title">Cuidar de si não deveria<br/><em>tornar o dia mais complicado.</em></h2>
-        <p>Entre uma rotina corrida e tantas opções parecidas, escolher um produto natural pode gerar mais dúvidas do que confiança. Você quer algo prático, mas também quer entender o que está levando para casa.</p>
-        <p>Foi para unir esses dois lados — simplicidade e informação — que a Rubee Apis foi criada.</p>
+        <p className="section-kicker">Uma escolha que cabe no dia</p>
+        <h2 id="identification-title">Natural no que importa.<br/><em>Simples no que você precisa.</em></h2>
+        <p>Você não precisa de mais uma rotina difícil de seguir. Precisa de uma escolha agradável, prática e fácil de continuar mesmo nos dias corridos.</p>
+        <p>Rubee Apis transforma a própolis vermelha brasileira em um pequeno gesto diário, com sabor suave e nenhuma complicação.</p>
       </div>
     </section>
   );
@@ -158,10 +122,10 @@ function TrustStrip() {
   return (
     <section className="trust-strip" aria-label="Diferenciais da compra">
       <div className="container trust-grid">
-        <div><Icon name="leaf"/><span><b>Origem</b>Própolis vermelha brasileira</span></div>
-        <div><Icon name="bottle"/><span><b>Praticidade</b>Conta-gotas para facilitar o uso</span></div>
-        <div><Icon name="shield"/><span><b>Clareza</b>Lote, validade e orientações na embalagem</span></div>
-        <div><Icon name="check"/><span><b>Confiança</b>Informações para escolher com tranquilidade</span></div>
+        <div><Icon name="drop"/><span><b>10 gotinhas</b>Um gesto simples por dia</span></div>
+        <div><Icon name="spark"/><span><b>Sabor suave</b>Sem gosto forte</span></div>
+        <div><Icon name="bottle"/><span><b>Conta-gotas</b>Praticidade sem desperdício</span></div>
+        <div><Icon name="leaf"/><span><b>Origem brasileira</b>Própolis vermelha sem exageros</span></div>
       </div>
     </section>
   );
@@ -172,8 +136,8 @@ function Benefits() {
     <section className="section benefits" id="beneficios">
       <div className="container">
         <div className="section-heading">
-          <div><p className="section-kicker">Rubee Apis como solução</p><h2>Tudo o que importa,<br/><em>em uma escolha mais simples.</em></h2></div>
-          <p>Praticidade, origem e informação reunidas para ajudar você a escolher com mais segurança.</p>
+          <div><p className="section-kicker">Vantagens para a vida real</p><h2>Mais fácil de começar.<br/><em>Mais fácil de continuar.</em></h2></div>
+          <p>Menos esforço para usar, sabor mais agradável e uma origem que você consegue reconhecer.</p>
         </div>
         <div className="benefit-grid">
           {benefits.map((benefit) => (
@@ -199,14 +163,14 @@ function Origin() {
         <img className="origin-presenter-product origin-presenter-product--bottle" src="/images/product-bottle-official.png" alt="Frasco Rubee Apis" width="154" height="500" loading="lazy" />
       </div>
       <div className="origin-copy">
-        <p className="section-kicker section-kicker--light">Origem brasileira</p>
-        <h2>Uma origem que dá<br/><em>identidade a cada frasco.</em></h2>
-        <p>A própolis vermelha brasileira se distingue por sua coloração e pela relação com fontes botânicas encontradas em ecossistemas costeiros. A Rubee Apis aproxima essa origem de uma experiência simples, prática e fácil de compreender.</p>
+        <p className="section-kicker section-kicker--light">Da origem para o seu dia</p>
+        <h2>Brasileira na origem.<br/><em>Simples na experiência.</em></h2>
+          <p>A própolis vermelha brasileira é o ponto de partida. Rubee Apis combina essa origem com sabor suave e um uso simples, para quem quer uma escolha natural que realmente caiba no dia.</p>
         <div className="specs">
-          <div><span>Tipo</span><b>Extrato de própolis vermelha</b></div>
-          <div><span>Conteúdo</span><b>30 ml</b></div>
+          <div><span>No dia a dia</span><b>10 gotinhas</b></div>
+          <div><span>Experiência</span><b>Sabor suave</b></div>
+          <div><span>Praticidade</span><b>Conta-gotas</b></div>
           <div><span>Origem</span><b>Brasileira</b></div>
-          <div><span>Embalagem</span><b>Frasco âmbar com conta-gotas</b></div>
         </div>
         <a className="text-link" href="#ciencia">Conheça a origem botânica <Icon name="arrow" size={18}/></a>
       </div>
@@ -236,41 +200,14 @@ function Routine() {
     <section className="section routine" id="como-usar">
       <div className="container routine-grid">
         <div className="routine-copy">
-          <p className="section-kicker">Como incluir no dia a dia</p>
-          <h2>Feita para caber<br/><em>no seu jeito de viver.</em></h2>
-          <p className="routine-intro">Mantenha a Rubee Apis em um local de fácil acesso e utilize somente conforme as instruções da embalagem. A quantidade, a frequência e as advertências do fabricante devem ser sempre a referência.</p>
-          <div className="routine-guidance"><Icon name="shield"/><p>O modo de uso completo será reproduzido aqui após a confirmação da documentação aprovada.</p></div>
+          <p className="section-kicker">Um gesto fácil de repetir</p>
+          <h2>Dez gotinhas.<br/><em>Um passo simples no seu dia.</em></h2>
+          <p className="routine-intro">Separe as 10 gotinhas conforme a orientação da marca e siga sempre as advertências do rótulo. O conta-gotas deixa esse momento rápido, prático e fácil de manter.</p>
+          <div className="routine-guidance"><Icon name="shield"/><p>Para usar com tranquilidade, consulte as orientações e restrições apresentadas na embalagem.</p></div>
         </div>
         <div className="routine-visual">
           <img className="routine-photo" src="/images/hero-product-blurred-v2.webp" alt="Frasco e embalagem Rubee Apis" width="1672" height="939" loading="lazy" />
-          <div className="routine-quote"><Icon name="drop" size={18}/><p>Use somente conforme<br/>as instruções da embalagem.</p></div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Quality() {
-  return (
-    <section className="quality" id="qualidade">
-      <div className="container quality-grid">
-        <div className="sif-fact">
-          <span>Identificação exibida na embalagem</span>
-          <strong>S.I.F. 3698</strong>
-          <p>Estabelecimento sob Serviço de Inspeção Federal.</p>
-          <small>Fabricante e município/UF: dados pendentes de confirmação documental.</small>
-        </div>
-        <div className="quality-copy">
-          <p className="section-kicker section-kicker--light">Informação do produto</p>
-          <h2>Confiança não precisa ficar<br/><em>nas letras pequenas.</em></h2>
-          <p>Antes de escolher, você deve conseguir entender quem produz, o que existe no frasco e quais orientações precisam ser seguidas. A embalagem exibe o S.I.F. 3698.</p>
-          <div className="quality-points">
-            <span><Icon name="check" size={17}/> S.I.F. 3698 exibido na embalagem</span>
-            <span><Icon name="check" size={17}/> Inspeção federal de produto apícola</span>
-            <span><Icon name="check" size={17}/> Lote e validade identificados</span>
-            <span><Icon name="check" size={17}/> Modo de uso indicado no rótulo</span>
-          </div>
-          <a className="text-link" href="https://www.gov.br/agricultura/pt-br/internacional/assuntos/inspecao/produtos-animal/sif/servico-de-inspecao-federal-sif" target="_blank" rel="noreferrer">Entenda o S.I.F. no MAPA <Icon name="arrow" size={18}/></a>
+          <div className="routine-quote"><Icon name="drop" size={18}/><p>10 gotinhas.<br/>Sem complicação.</p></div>
         </div>
       </div>
     </section>
@@ -300,37 +237,37 @@ function Offer() {
     <section className="section offer-section" id="comprar">
       <div className="container offer-grid">
         <div className="offer-story">
-          <p className="section-kicker">Sua Rubee Apis</p>
-          <h2>Uma escolha simples<br/><em>para levar com você.</em></h2>
-          <p>Uma forma simples de incluir a própolis vermelha brasileira no seu dia, com praticidade para usar e clareza para escolher.</p>
+          <p className="section-kicker">Oportunidade de pré-lançamento</p>
+          <h2>Comece com uma rotina<br/><em>mais simples de manter.</em></h2>
+          <p>Entre na lista para saber primeiro quando a Rubee Apis estiver disponível por R$ 119,90.</p>
           <ul>
-            <li><Icon name="check" size={17}/> 10 gotinhas por dia</li>
-            <li><Icon name="check" size={17}/> Sabor suave, sem gosto forte</li>
-            <li><Icon name="check" size={17}/> Conta-gotas prático para o dia a dia</li>
+            <li><Icon name="check" size={17}/> Uso diário simples e rápido</li>
+            <li><Icon name="check" size={17}/> Sabor suave e agradável</li>
+            <li><Icon name="check" size={17}/> Praticidade para continuar todos os dias</li>
           </ul>
-          <div className="offer-note"><Icon name="box"/><span><b>Opções de entrega</b>Prazo informado no checkout</span></div>
+          <div className="offer-note"><Icon name="spark"/><span><b>Seja avisado primeiro</b>Acompanhe a abertura das vendas</span></div>
         </div>
         <div className="buy-card">
           <div className="buy-card-top"><span>Rubee Apis</span><span>30 ml</span></div>
           <div className="buy-product"><img src="/images/product-packshot-official.png" alt="Frasco e embalagem do Extrato de Própolis Vermelha Rubee Apis" width="705" height="1199" loading="lazy" /></div>
           <div className="buy-info">
-            <p>Extrato de Própolis Vermelha</p>
-            <div className="buy-price"><span>Total</span><strong>{total.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</strong></div>
-            <div className="quantity-row" role="group" aria-labelledby="quantity-label">
+            <p>Rubee Apis · Própolis Vermelha</p>
+            <div className="buy-price"><span>{checkoutUrl ? "Total" : "Preço"}</span><strong>{total.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</strong></div>
+            {checkoutUrl && <div className="quantity-row" role="group" aria-labelledby="quantity-label">
               <span id="quantity-label">Quantidade</span>
               <div className="quantity-control">
                 <button type="button" onClick={() => setQuantity((value) => Math.max(1, value - 1))} aria-label="Diminuir quantidade"><Icon name="minus" size={17}/></button>
                 <output id="quantity" aria-live="polite">{quantity}</output>
                 <button type="button" onClick={() => setQuantity((value) => Math.min(10, value + 1))} aria-label="Aumentar quantidade"><Icon name="plus" size={17}/></button>
               </div>
-            </div>
+            </div>}
             {checkoutUrl ? (
               <a className="button button--wine button--full" href={checkoutUrl}>Comprar {quantity} {quantity === 1 ? "unidade" : "unidades"} <Icon name="arrow" size={19}/></a>
             ) : (
               <button className="button button--wine button--full" type="button" onClick={handleCheckout}>Quero ser avisado <Icon name="arrow" size={19}/></button>
             )}
             {checkoutMessage && <p className="checkout-message" role="status">Seja uma das primeiras pessoas a saber quando a Rubee Apis estiver disponível. O canal de cadastro será publicado aqui.</p>}
-            <p className="secure-line"><Icon name="lock" size={14}/> Compra processada em ambiente seguro</p>
+            <p className="secure-line"><Icon name="lock" size={14}/> Nenhuma cobrança no pré-lançamento</p>
           </div>
         </div>
       </div>
@@ -343,7 +280,7 @@ function FAQ() {
   return (
     <section className="section faq" id="duvidas">
       <div className="container faq-grid">
-        <div className="faq-intro"><p className="section-kicker">Perguntas frequentes</p><h2>Antes de escolher,<br/><em>saiba mais.</em></h2><p>Ainda ficou com alguma dúvida? As informações da unidade recebida e do seu rótulo devem ser sempre a referência principal.</p></div>
+        <div className="faq-intro"><p className="section-kicker">Perguntas frequentes</p><h2>Escolha com mais<br/><em>tranquilidade.</em></h2><p>Respostas diretas sobre a experiência, o uso e o pré-lançamento da Rubee Apis.</p></div>
         <div className="accordion">
           {faqs.map((item, index) => {
             const isOpen = index === openIndex;
@@ -362,8 +299,8 @@ function Closing() {
       <div className="closing-pattern" />
       <div className="container closing-inner">
         <BrandMark />
-        <p>Rubee Apis · Própolis vermelha brasileira · 30 ml</p>
-        <h2>Uma escolha simples<br/><em>pode ser o começo.</em></h2>
+        <p>Rubee Apis · Própolis vermelha brasileira</p>
+        <h2>Seu próximo cuidado<br/><em>pode ser o mais simples.</em></h2>
         <a className="button button--gold" href="#comprar">{checkoutBaseUrl ? "Comprar Rubee Apis" : "Quero ser avisado"} <Icon name="arrow" size={19}/></a>
       </div>
     </section>
@@ -375,7 +312,7 @@ function Footer() {
     <footer>
       <div className="container footer-top">
         <BrandMark />
-        <div className="footer-copy"><p>Extrato de Própolis Vermelha Rubee Apis · 30 ml</p><small>Use conforme as instruções do rótulo. Este produto não é medicamento.</small><small className="footer-pending">Dados empresariais, atendimento e políticas serão publicados antes da abertura das vendas.</small></div>
+        <div className="footer-copy"><p>Rubee Apis · Própolis vermelha brasileira</p><small>Use conforme as orientações do rótulo. Este produto não é medicamento.</small><small className="footer-pending">Loja em pré-lançamento. Nenhuma cobrança é realizada nesta etapa.</small></div>
         <a href="#inicio" className="back-top" aria-label="Voltar ao topo"><Icon name="arrow" size={18}/></a>
       </div>
       <div className="container footer-bottom"><span>© {new Date().getFullYear()} Rubee Apis. Todos os direitos reservados.</span><span>Produto brasileiro</span></div>
@@ -401,7 +338,7 @@ function App() {
         <Closing />
       </main>
       <Footer />
-      <a className="mobile-buy" href="#comprar"><span><small>1 unidade</small>R$ 119,90</span><b>{checkoutBaseUrl ? "Comprar" : "Avise-me"} <Icon name="arrow" size={17}/></b></a>
+      <a className="mobile-buy" href="#comprar"><span><small>1 unidade</small>R$ 119,90</span><b>{checkoutBaseUrl ? "Comprar" : "Quero ser avisado"} <Icon name="arrow" size={17}/></b></a>
     </>
   );
 }

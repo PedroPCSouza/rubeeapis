@@ -144,6 +144,10 @@ h3 {
   transform: translateY(-2px);
 }
 
+.header-primary-cta {
+  margin: 0;
+}
+
 .menu-button {
   display: none;
   padding: 8px;
@@ -3091,6 +3095,16 @@ footer {
 
   .site-header .brand-logo {
     width: 76px;
+  }
+
+  .header-primary-cta {
+    display: none;
+  }
+
+  .hero-purchase .button {
+    gap: 9px;
+    padding-inline: 14px;
+    white-space: nowrap;
   }
 
   .nav-links {
