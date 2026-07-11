@@ -196,7 +196,7 @@ function Origin() {
     <section className="origin" id="origem">
       <div className="origin-art origin-art--presenter">
         <img className="origin-presenter" src="/images/presenter-hq.webp" alt="Apresentadora Rubee Apis mostrando o produto" width="1386" height="1848" loading="lazy" />
-        <img className="origin-presenter-product" src="/images/product-packshot-cutout-v3.webp" alt="Frasco e embalagem Rubee Apis" width="387" height="516" loading="lazy" />
+        <img className="origin-presenter-product origin-presenter-product--bottle" src="/images/product-bottle-official.png" alt="Frasco Rubee Apis" width="154" height="500" loading="lazy" />
       </div>
       <div className="origin-copy">
         <p className="section-kicker section-kicker--light">Origem brasileira</p>
@@ -312,7 +312,7 @@ function Offer() {
         </div>
         <div className="buy-card">
           <div className="buy-card-top"><span>Rubee Apis</span><span>30 ml</span></div>
-          <div className="buy-product"><img src="/images/product-packshot-cutout-v3.webp" alt="Frasco e embalagem do Extrato de Própolis Vermelha Rubee Apis" width="387" height="516" loading="lazy" /></div>
+          <div className="buy-product"><img src="/images/product-packshot-official.png" alt="Frasco e embalagem do Extrato de Própolis Vermelha Rubee Apis" width="705" height="1199" loading="lazy" /></div>
           <div className="buy-info">
             <p>Extrato de Própolis Vermelha</p>
             <div className="buy-price"><span>Total</span><strong>{total.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</strong></div>

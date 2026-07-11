@@ -2696,6 +2696,12 @@ footer {
   filter: drop-shadow(0 22px 28px rgba(31, 8, 13, .32));
 }
 
+.origin-art--presenter > .origin-presenter-product--bottle {
+  right: 10%;
+  bottom: 5%;
+  width: clamp(86px, 8.5vw, 112px);
+}
+
 @media (max-width: 700px) {
   .identification {
     padding-block: 60px;
@@ -2717,6 +2723,11 @@ footer {
     right: 2%;
     bottom: 2%;
     width: 42%;
+  }
+
+  .origin-art--presenter > .origin-presenter-product--bottle {
+    right: 8%;
+    width: 20%;
   }
 }
 :root {
