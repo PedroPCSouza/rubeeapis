@@ -17,10 +17,12 @@ export default function Scene3D() {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const isMobile = window.innerWidth < 760;
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(mount.clientWidth, mount.clientHeight);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 0.82;
     mount.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
@@ -28,33 +30,43 @@ export default function Scene3D() {
     camera.position.set(0, 0, 8);
 
     // --- Luzes ---
-    scene.add(new THREE.AmbientLight(0xffe8d0, 0.7));
-    const key = new THREE.DirectionalLight(0xfff2df, 1.8);
+    scene.add(new THREE.AmbientLight(0xffe8d0, 0.38));
+    scene.add(new THREE.HemisphereLight(0xf2d79b, 0x26070e, 0.72));
+    const key = new THREE.DirectionalLight(0xfff2df, 1.15);
     key.position.set(4, 6, 6);
     scene.add(key);
-    const rim = new THREE.PointLight(0xc9a15a, 16, 22);
-    rim.position.set(-5, 2.5, -3);
+    const rim = new THREE.PointLight(0xb95542, 9, 18);
+    rim.position.set(4.5, 1.5, -2);
     scene.add(rim);
 
     // --- Gotas de própolis flutuando em profundidade ---
     const drops: THREE.Mesh[] = [];
-    const dropMat = new THREE.MeshStandardMaterial({
-      color: 0xa32738,
-      emissive: 0x6e1424,
-      emissiveIntensity: 0.8,
-      roughness: 0.15,
+    const dropMat = new THREE.MeshPhysicalMaterial({
+      color: 0x8f2430,
+      emissive: 0x3d080f,
+      emissiveIntensity: 0.32,
+      roughness: 0.24,
+      metalness: 0.02,
+      transmission: 0.08,
+      transparent: true,
+      opacity: 0.78,
+      clearcoat: 0.8,
+      clearcoatRoughness: 0.18,
     });
-    const dropCount = isMobile ? 5 : 10;
+    const dropCount = isMobile ? 3 : 7;
+    const dropAnchors = [
+      [-5.1, 2.3, -1.2], [5.15, 2.15, -1.8], [-5.35, -2.55, -0.8],
+      [4.85, -2.35, -1.4], [2.7, 3.05, -3.1], [-2.55, -3.15, -2.4], [5.7, 0.1, -3.6],
+    ];
     for (let i = 0; i < dropCount; i++) {
-      const size = 0.04 + Math.random() * 0.1;
-      const drop = new THREE.Mesh(new THREE.SphereGeometry(size, 18, 14), dropMat);
-      const angle = (i / dropCount) * Math.PI * 2 + Math.random();
-      drop.position.set(
-        Math.cos(angle) * (2 + Math.random() * 3),
-        (Math.random() - 0.5) * 5,
-        (Math.random() - 0.5) * 4 - 0.5
-      );
-      drop.userData.seed = Math.random() * 10;
+      const size = 0.085 + (i % 3) * 0.035;
+      const drop = new THREE.Mesh(new THREE.SphereGeometry(size, 24, 18), dropMat);
+      const [x, y, z] = dropAnchors[i];
+      drop.position.set(x, y, z);
+      drop.scale.set(0.82, 1.28, 0.82);
+      drop.userData.seed = i * 1.73 + 0.5;
+      drop.userData.baseX = x;
+      drop.userData.baseY = y;
       drops.push(drop);
       scene.add(drop);
     }
@@ -64,21 +76,40 @@ export default function Scene3D() {
     const bokehMat = new THREE.MeshBasicMaterial({
       color: 0xc9a15a,
       transparent: true,
-      opacity: 0.08,
+      opacity: 0.035,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
     });
-    const bokehCount = isMobile ? 4 : 8;
+    const bokehCount = isMobile ? 2 : 5;
     for (let i = 0; i < bokehCount; i++) {
-      const bokeh = new THREE.Mesh(new THREE.SphereGeometry(0.35 + Math.random() * 0.7, 20, 16), bokehMat);
-      bokeh.position.set((Math.random() - 0.5) * 12, (Math.random() - 0.5) * 7, -2 - Math.random() * 4);
-      bokeh.userData.seed = Math.random() * 10;
+      const bokeh = new THREE.Mesh(new THREE.SphereGeometry(0.28 + i * 0.12, 20, 16), bokehMat);
+      const side = i % 2 === 0 ? 1 : -1;
+      bokeh.position.set(side * (4.1 + i * 0.25), 2.6 - i * 1.25, -3.5 - i * 0.35);
+      bokeh.userData.seed = i * 1.31;
+      bokeh.userData.baseY = bokeh.position.y;
       bokehs.push(bokeh);
       scene.add(bokeh);
     }
 
+    // Arcos finos repetem as curvas do rótulo e conectam a cena à identidade visual.
+    const arcs = new THREE.Group();
+    const arcMaterial = new THREE.MeshBasicMaterial({
+      color: 0xd8b56d,
+      transparent: true,
+      opacity: 0.12,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    [-0.24, 0, 0.24].forEach((offset, index) => {
+      const arc = new THREE.Mesh(new THREE.TorusGeometry(1.55 + index * 0.22, 0.008, 8, 100, Math.PI * 1.2), arcMaterial);
+      arc.position.set(2.25, -0.15 + offset, -2.8 - index * 0.18);
+      arc.rotation.set(1.38, 0.15, -0.62);
+      arcs.add(arc);
+    });
+    scene.add(arcs);
+
     // --- Partículas douradas ---
-    const particleCount = isMobile ? 90 : 220;
+    const particleCount = isMobile ? 48 : 120;
     const positions = new Float32Array(particleCount * 3);
     for (let i = 0; i < particleCount; i++) {
       positions[i * 3] = (Math.random() - 0.5) * 13;
@@ -91,9 +122,9 @@ export default function Scene3D() {
       particleGeo,
       new THREE.PointsMaterial({
         color: 0xe2c98f,
-        size: 0.035,
+        size: 0.022,
         transparent: true,
-        opacity: 0.75,
+        opacity: 0.42,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
         sizeAttenuation: true,
@@ -132,15 +163,16 @@ export default function Scene3D() {
       camera.lookAt(0, -scrollP * 1.2, 0);
       drops.forEach((drop, i) => {
         const seed = drop.userData.seed as number;
-        drop.position.y += Math.sin(t * (0.5 + seed * 0.08) + seed) * 0.004;
-        drop.position.x += Math.cos(t * 0.3 + seed) * 0.0015;
-        drop.rotation.y = t * 0.4 + i;
+        drop.position.y = (drop.userData.baseY as number) + Math.sin(t * 0.32 + seed) * 0.11;
+        drop.position.x = (drop.userData.baseX as number) + Math.cos(t * 0.22 + seed) * 0.06;
+        drop.rotation.y = t * 0.18 + i;
       });
       bokehs.forEach((bokeh) => {
         const seed = bokeh.userData.seed as number;
-        bokeh.position.y += Math.sin(t * 0.25 + seed) * 0.002;
+        bokeh.position.y = (bokeh.userData.baseY as number) + Math.sin(t * 0.18 + seed) * 0.08;
       });
-      particles.rotation.y = t * 0.02;
+      particles.rotation.y = t * 0.012;
+      arcs.rotation.z = Math.sin(t * 0.16) * 0.025;
       renderer.render(scene, camera);
       raf = requestAnimationFrame(tick);
     };

@@ -152,11 +152,34 @@ h1 em, h2 em { font-style: italic; color: var(--gold); }
     linear-gradient(168deg, var(--wine-deep) 0%, var(--wine-dark) 55%, var(--wine-black) 100%);
 }
 
+.hero::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 34% 66% at 67% 51%, rgba(224, 177, 102, 0.14), transparent 68%),
+    linear-gradient(90deg, rgba(27, 4, 9, 0.26), transparent 46%, rgba(35, 7, 12, 0.18));
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 150px rgba(12, 2, 5, 0.55);
+}
+
 .scene3d {
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
+  opacity: 0.82;
+  -webkit-mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.52), #000 28%, #000 78%, rgba(0, 0, 0, 0.58));
+  mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.52), #000 28%, #000 78%, rgba(0, 0, 0, 0.58));
 }
 
 .scene3d canvas { width: 100% !important; height: 100% !important; }
@@ -166,29 +189,29 @@ h1 em, h2 em { font-style: italic; color: var(--gold); }
   inset: 0;
   z-index: 2;
   pointer-events: none;
-  opacity: 0.5;
+  opacity: 0.24;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
 }
 
 .hero-glow {
   position: absolute;
   z-index: 2;
-  right: -14%;
-  top: 16%;
-  width: 58vw;
-  height: 58vw;
-  max-width: 780px;
-  max-height: 780px;
+  right: 9%;
+  top: 18%;
+  width: 38vw;
+  height: 62vw;
+  max-width: 560px;
+  max-height: 720px;
   pointer-events: none;
-  background: radial-gradient(circle, rgba(201, 161, 90, 0.18), transparent 65%);
-  filter: blur(10px);
+  background: radial-gradient(ellipse, rgba(211, 160, 84, 0.2), rgba(137, 38, 49, 0.08) 42%, transparent 70%);
+  filter: blur(16px);
 }
 
 .hero-grid {
   position: relative;
   z-index: 3;
   display: grid;
-  grid-template-columns: minmax(0, 560px) 1fr auto;
+  grid-template-columns: minmax(0, 570px) minmax(210px, 300px) auto;
   align-items: center;
   gap: clamp(24px, 4vw, 60px);
   padding: 150px 0 110px;
@@ -198,7 +221,7 @@ h1 em, h2 em { font-style: italic; color: var(--gold); }
 .hero-product {
   position: relative;
   justify-self: center;
-  width: clamp(200px, 24vw, 320px);
+  width: clamp(190px, 19vw, 255px);
   transform-style: preserve-3d;
   will-change: transform;
 }
@@ -209,16 +232,16 @@ h1 em, h2 em { font-style: italic; color: var(--gold); }
   width: 100%;
   height: auto;
   animation: hero-float 6s ease-in-out infinite;
-  filter: drop-shadow(0 40px 50px rgba(10, 2, 4, 0.55));
+  filter: saturate(.92) contrast(1.04) drop-shadow(0 34px 40px rgba(10, 2, 4, 0.58)) drop-shadow(0 0 24px rgba(205, 151, 83, 0.12));
 }
 
 .hero-product-halo {
   position: absolute;
   z-index: 1;
-  inset: -22%;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(201, 161, 90, 0.28), rgba(163, 39, 56, 0.14) 45%, transparent 70%);
-  filter: blur(6px);
+  inset: -16% -30%;
+  border-radius: 46%;
+  background: radial-gradient(ellipse, rgba(218, 174, 101, 0.22), rgba(134, 36, 48, 0.1) 46%, transparent 72%);
+  filter: blur(12px);
   animation: halo-pulse 6s ease-in-out infinite;
 }
 
@@ -226,12 +249,12 @@ h1 em, h2 em { font-style: italic; color: var(--gold); }
   position: absolute;
   z-index: 0;
   left: 50%;
-  bottom: -34px;
-  width: 62%;
-  height: 26px;
+  bottom: -22px;
+  width: 72%;
+  height: 20px;
   transform: translateX(-50%);
   border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.55), transparent 70%);
+  background: radial-gradient(ellipse, rgba(7, 1, 3, 0.7), rgba(116, 52, 36, 0.2) 48%, transparent 72%);
   animation: shadow-pulse 6s ease-in-out infinite;
 }
 
@@ -264,6 +287,12 @@ h1 em, h2 em { font-style: italic; color: var(--gold); }
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--gold-light);
+}
+
+.hero-copy {
+  position: relative;
+  z-index: 2;
+  text-shadow: 0 2px 24px rgba(21, 3, 7, 0.32);
 }
 
 .eyebrow span {
