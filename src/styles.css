@@ -2669,6 +2669,11 @@ footer {
   background: #cbc6c3;
 }
 
+.origin-art--presenter::before,
+.origin-art--presenter::after {
+  display: none;
+}
+
 .origin-art--presenter > .origin-presenter {
   position: absolute;
   inset: 0;

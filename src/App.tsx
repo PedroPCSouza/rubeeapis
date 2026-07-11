@@ -119,7 +119,7 @@ function Hero() {
   return (
     <section className="hero" id="inicio">
       <div className="hero-photo" aria-hidden="true">
-        <img src="/images/hero-product.webp" alt="" width="1672" height="939" fetchPriority="high" />
+        <img src="/images/hero-product-blurred-v2.webp" alt="" width="1672" height="939" fetchPriority="high" />
       </div>
       <div className="hero-noise" />
       <div className="hero-glow" />
@@ -195,8 +195,8 @@ function Origin() {
   return (
     <section className="origin" id="origem">
       <div className="origin-art origin-art--presenter">
-        <img className="origin-presenter" src="/images/presenter.webp" alt="Apresentadora Rubee Apis mostrando o produto" width="1386" height="1848" loading="lazy" />
-        <img className="origin-presenter-product" src="/images/product-packshot-cutout.webp" alt="Frasco e embalagem Rubee Apis" width="387" height="516" loading="lazy" />
+        <img className="origin-presenter" src="/images/presenter-hq.webp" alt="Apresentadora Rubee Apis mostrando o produto" width="1386" height="1848" loading="lazy" />
+        <img className="origin-presenter-product" src="/images/product-packshot-cutout-v3.webp" alt="Frasco e embalagem Rubee Apis" width="387" height="516" loading="lazy" />
       </div>
       <div className="origin-copy">
         <p className="section-kicker section-kicker--light">Origem brasileira</p>
@@ -242,7 +242,7 @@ function Routine() {
           <div className="routine-guidance"><Icon name="shield"/><p>O modo de uso completo será reproduzido aqui após a confirmação da documentação aprovada.</p></div>
         </div>
         <div className="routine-visual">
-          <img className="routine-photo" src="/images/hero-product.webp" alt="Frasco e embalagem Rubee Apis" width="1672" height="939" loading="lazy" />
+          <img className="routine-photo" src="/images/hero-product-blurred-v2.webp" alt="Frasco e embalagem Rubee Apis" width="1672" height="939" loading="lazy" />
           <div className="routine-quote"><Icon name="drop" size={18}/><p>Use somente conforme<br/>as instruções da embalagem.</p></div>
         </div>
       </div>
@@ -312,7 +312,7 @@ function Offer() {
         </div>
         <div className="buy-card">
           <div className="buy-card-top"><span>Rubee Apis</span><span>30 ml</span></div>
-          <div className="buy-product"><img src="/images/product-packshot-cutout.webp" alt="Frasco e embalagem do Extrato de Própolis Vermelha Rubee Apis" width="387" height="516" loading="lazy" /></div>
+          <div className="buy-product"><img src="/images/product-packshot-cutout-v3.webp" alt="Frasco e embalagem do Extrato de Própolis Vermelha Rubee Apis" width="387" height="516" loading="lazy" /></div>
           <div className="buy-info">
             <p>Extrato de Própolis Vermelha</p>
             <div className="buy-price"><span>Total</span><strong>{total.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</strong></div>
