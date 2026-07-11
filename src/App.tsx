@@ -100,10 +100,10 @@ const moments = [
 ];
 
 const scienceAreas = [
-  { level: "Todos os dias", title: "Auxílio às defesas naturais", text: "Tradicionalmente presente nas rotinas de cuidado, a própolis é estudada por sua interação com as respostas naturais de defesa do organismo." },
-  { level: "Proteção diária", title: "Auxílio na proteção antioxidante", text: "Fenólicos e isoflavonoides presentes na própolis vermelha são estudados pelo potencial de auxiliar o organismo no combate ao excesso de radicais livres." },
-  { level: "Mais equilíbrio", title: "Auxílio ao equilíbrio inflamatório", text: "Compostos da própolis vermelha são investigados por sua participação nas respostas naturais relacionadas à inflamação e ao equilíbrio do organismo." },
-  { level: "Cuidado completo", title: "Auxílio no cuidado bucal", text: "A própolis vermelha também desperta interesse em pesquisas sobre o equilíbrio da boca e amplia seu espaço nas rotinas de cuidado diário." },
+  { level: "Todos os dias", title: "Apoio às defesas naturais", text: "Tradicionalmente presente nas rotinas de cuidado, a própolis é estudada pela forma como seus compostos interagem com as respostas naturais de defesa do organismo." },
+  { level: "Proteção diária", title: "Apoio antioxidante", text: "Fenólicos e isoflavonoides da própolis vermelha são estudados pelo potencial de ajudar o organismo a lidar com o excesso de radicais livres." },
+  { level: "Mais equilíbrio", title: "Apoio ao equilíbrio inflamatório", text: "Pesquisas investigam como os compostos da própolis vermelha participam das respostas naturais ligadas à inflamação e ao equilíbrio do organismo." },
+  { level: "Cuidado completo", title: "Apoio à saúde bucal", text: "A própolis vermelha também é estudada por sua relação com o equilíbrio da boca, ampliando seu espaço nas rotinas de cuidado diário." },
 ];
 
 const ritualSteps = [
@@ -114,7 +114,7 @@ const ritualSteps = [
 
 const faqs = [
   { q: "O que é a Rubee Apis?", a: "Um extrato de própolis vermelha brasileira em gotas, com sabor suave e conta-gotas, criado para caber na sua rotina diária sem esforço." },
-  { q: "Quais benefícios são associados à própolis vermelha?", a: "A própolis vermelha é estudada pelo potencial de auxiliar as defesas naturais, a proteção antioxidante, o equilíbrio do organismo e o cuidado com a saúde bucal. A Rubee Apis é um alimento, não é medicamento e não substitui tratamentos." },
+  { q: "Quais benefícios são associados à própolis vermelha?", a: "A própolis vermelha é estudada pelo potencial de apoiar as defesas naturais, a proteção antioxidante, o equilíbrio das respostas inflamatórias e a saúde bucal. São áreas de pesquisa, não promessa de resultado individual. A Rubee Apis é um alimento, não é medicamento e não substitui tratamentos." },
   { q: "O sabor é forte?", a: "Não. A Rubee Apis foi pensada para ter sabor suave, sem o gosto forte que costuma afastar as pessoas da própolis." },
   { q: "Como uso no dia a dia?", a: "Pingue a quantidade indicada no rótulo — o conta-gotas facilita a medida. Consulte sempre as orientações, restrições e conservação na embalagem." },
   { q: "O que vem na compra?", a: "Uma unidade Rubee Apis de 30 ml com conta-gotas, em sua embalagem individual." },
@@ -238,7 +238,7 @@ function Science() {
       <div className="container">
         <div className="section-heading section-heading--light" data-reveal>
           <div><p className="section-kicker section-kicker--light">Benefícios para a vida real</p><h2>De Alagoas para fazer<br/><em>parte da sua rotina.</em></h2></div>
-          <p>Produzida em apiários alagoanos especializados, a própolis vermelha reúne origem singular e compostos que despertam o interesse da ciência — uma escolha natural pensada para o cuidado de todos os dias.</p>
+          <p>Produzida em apiários alagoanos especializados, a própolis vermelha nasce da relação das abelhas com o rabo-de-bugio (<i>Dalbergia ecastophyllum</i>) e reúne compostos que despertam o interesse da ciência.</p>
         </div>
         <div className="science-grid">
           {scienceAreas.map((area, index) => (
@@ -295,7 +295,7 @@ function Origin() {
       <div className="origin-copy" data-reveal>
         <p className="section-kicker section-kicker--light">Da origem para o seu dia</p>
         <h2>Alagoana na origem.<br/><em>Sua na rotina.</em></h2>
-        <p>Dos apiários especializados de Alagoas até o seu conta-gotas: a própolis vermelha nasce em ecossistemas costeiros ligados à <i>Dalbergia ecastophyllum</i> e chega com sabor suave e a praticidade que faz você continuar.</p>
+        <p>Dos apiários especializados de Alagoas até o seu conta-gotas: a própolis vermelha nasce em ecossistemas costeiros onde as abelhas encontram o rabo-de-bugio (<i>Dalbergia ecastophyllum</i>) e chega com sabor suave e a praticidade que faz você continuar.</p>
         <div className="specs">
           <div><span>Conteúdo</span><b>30 ml em gotas</b></div>
           <div><span>Experiência</span><b>Sabor suave</b></div>
