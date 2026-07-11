@@ -39,6 +39,23 @@ Depois de autenticar a CLI da Cloudflare:
 npm run deploy
 ```
 
+## Checkout Stripe
+
+O checkout usa uma Stripe Checkout Session criada exclusivamente no Cloudflare Worker:
+
+- `/checkout` exibe a revisão do pedido e a quantidade;
+- `POST /api/checkout` cria a sessão na Stripe;
+- a Stripe coleta endereço, telefone e pagamento em seu ambiente seguro;
+- `/pedido-confirmado` consulta `GET /api/checkout-session` antes de confirmar o pedido.
+
+A chave secreta deve existir apenas como secret do Worker:
+
+```bash
+npx wrangler secret put STRIPE_SECRET_KEY
+```
+
+Para desenvolvimento local, use uma chave de teste em `.dev.vars`. Nunca use o prefixo `VITE_` para a chave secreta, pois variáveis Vite são incluídas no bundle do navegador.
+
 ## Antes de colocar no ar
 
 - Revisar e aprovar as fotografias do produto e da apresentadora antes da campanha final.

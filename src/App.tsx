@@ -305,30 +305,10 @@ function Origin() {
 
 function Offer() {
   const [quantity, setQuantity] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const total = PRICE * quantity;
 
-  const handleBuy = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ quantity }),
-      });
-      const data = (await response.json()) as { url?: string; error?: string };
-      if (!response.ok || !data.url) {
-        setError(data.error ?? "Não foi possível iniciar o pagamento. Tente novamente.");
-        setLoading(false);
-        return;
-      }
-      window.location.href = data.url;
-    } catch {
-      setError("Não foi possível iniciar o pagamento. Verifique sua conexão e tente novamente.");
-      setLoading(false);
-    }
+  const handleBuy = () => {
+    window.location.href = `/checkout?quantity=${quantity}`;
   };
 
   return (
@@ -359,10 +339,9 @@ function Offer() {
                 <button type="button" onClick={() => setQuantity((value) => Math.min(10, value + 1))} aria-label="Aumentar quantidade"><Icon name="plus" size={17}/></button>
               </div>
             </div>
-            <button className="button button--wine button--full" type="button" onClick={handleBuy} disabled={loading}>
-              {loading ? "Abrindo pagamento…" : <>Comprar {quantity} {quantity === 1 ? "unidade" : "unidades"} <Icon name="arrow" size={19}/></>}
+            <button className="button button--wine button--full" type="button" onClick={handleBuy}>
+              Revisar e pagar <Icon name="arrow" size={19}/>
             </button>
-            {error && <p className="checkout-message" role="alert">{error}</p>}
             <p className="secure-line"><Icon name="lock" size={14}/> Pagamento processado pela Stripe em ambiente seguro</p>
           </div>
         </div>
@@ -416,33 +395,145 @@ function Footer() {
   );
 }
 
-function SuccessBanner() {
-  const [visible, setVisible] = useState(false);
+function CheckoutBrand() {
+  return (
+    <a className="checkout-brand" href="/#inicio" aria-label="Voltar para a página inicial da Rubee Apis">
+      <img src="/images/rubee-logo-white-v2.png" alt="Rubee Apis" width="343" height="271" />
+    </a>
+  );
+}
+
+function CheckoutPage() {
+  const params = new URLSearchParams(window.location.search);
+  const initialQuantity = Math.min(10, Math.max(1, Math.floor(Number(params.get("quantity"))) || 1));
+  const [quantity, setQuantity] = useState(initialQuantity);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const total = PRICE * quantity;
+  const canceled = params.get("cancelado") === "1";
+
+  const startStripeCheckout = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ quantity }),
+      });
+      const data = (await response.json()) as { url?: string; error?: string };
+      if (!response.ok || !data.url) {
+        setError(data.error ?? "Não foi possível abrir o pagamento. Tente novamente.");
+        setLoading(false);
+        return;
+      }
+      window.location.assign(data.url);
+    } catch {
+      setError("Não foi possível abrir o pagamento. Verifique sua conexão e tente novamente.");
+      setLoading(false);
+    }
+  };
+
+  return (
+    <main className="checkout-page">
+      <header className="checkout-header">
+        <div className="container checkout-header-inner">
+          <CheckoutBrand />
+          <span><Icon name="lock" size={15}/> Checkout seguro</span>
+        </div>
+      </header>
+      <section className="container checkout-layout">
+        <div className="checkout-intro">
+          <a className="checkout-back" href="/#comprar">← Voltar para a loja</a>
+          <p className="section-kicker">Revise seu pedido</p>
+          <h1>Falta só um passo<br/><em>para a Rubee Apis ser sua.</em></h1>
+          <p>Confira a quantidade e siga para o ambiente seguro da Stripe. Seus dados de pagamento não passam pelos servidores da Rubee Apis.</p>
+          <div className="checkout-assurances">
+            <span><Icon name="shield" size={20}/><b>Pagamento protegido</b>Processamento seguro pela Stripe</span>
+            <span><Icon name="lock" size={20}/><b>Dados preservados</b>Cartão informado somente na Stripe</span>
+            <span><Icon name="check" size={20}/><b>Resumo transparente</b>Valor total antes do pagamento</span>
+          </div>
+        </div>
+        <aside className="checkout-summary" aria-label="Resumo do pedido">
+          <div className="checkout-summary-product">
+            <img src="/images/product-packshot-official.png" alt="Frasco e embalagem Rubee Apis" width="705" height="1199" />
+            <div><small>Extrato de própolis vermelha</small><h2>Rubee Apis · 30 ml</h2><p>Sabor suave · Conta-gotas · Origem brasileira</p></div>
+          </div>
+          <div className="checkout-quantity">
+            <span>Quantidade</span>
+            <div className="quantity-control">
+              <button type="button" onClick={() => setQuantity((value) => Math.max(1, value - 1))} aria-label="Diminuir quantidade"><Icon name="minus" size={17}/></button>
+              <output aria-live="polite">{quantity}</output>
+              <button type="button" onClick={() => setQuantity((value) => Math.min(10, value + 1))} aria-label="Aumentar quantidade"><Icon name="plus" size={17}/></button>
+            </div>
+          </div>
+          <div className="checkout-totals"><span>Total</span><strong>{total.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</strong></div>
+          {canceled && <p className="checkout-notice">Pagamento cancelado. Seu pedido não foi cobrado e continua disponível para revisão.</p>}
+          {error && <p className="checkout-message" role="alert">{error}</p>}
+          <button className="button button--gold button--full" type="button" onClick={startStripeCheckout} disabled={loading}>
+            {loading ? "Conectando à Stripe…" : <>Ir para pagamento seguro <Icon name="arrow" size={19}/></>}
+          </button>
+          <p className="checkout-stripe-note"><Icon name="lock" size={14}/> Você será direcionado à Stripe para informar endereço e pagamento.</p>
+        </aside>
+      </section>
+    </main>
+  );
+}
+
+type CheckoutConfirmation = {
+  paid: boolean;
+  amountTotal?: number;
+  currency?: string;
+  email?: string;
+  customerName?: string;
+  quantity?: number;
+};
+
+function OrderConfirmationPage() {
+  const [confirmation, setConfirmation] = useState<CheckoutConfirmation | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("compra") === "sucesso") {
-      setVisible(true);
-      window.history.replaceState(null, "", window.location.pathname);
+    const sessionId = new URLSearchParams(window.location.search).get("session_id");
+    if (!sessionId) {
+      setError("Não encontramos uma sessão de pagamento para confirmar.");
+      return;
     }
+    fetch(`/api/checkout-session?id=${encodeURIComponent(sessionId)}`)
+      .then(async (response) => {
+        const data = (await response.json()) as CheckoutConfirmation & { error?: string };
+        if (!response.ok) throw new Error(data.error ?? "Não foi possível confirmar o pedido.");
+        setConfirmation(data);
+      })
+      .catch((reason: Error) => setError(reason.message));
   }, []);
 
-  if (!visible) return null;
+  const amount = confirmation?.amountTotal != null
+    ? (confirmation.amountTotal / 100).toLocaleString("pt-BR", { style: "currency", currency: (confirmation.currency ?? "brl").toUpperCase() })
+    : undefined;
+
   return (
-    <div className="success-banner" role="status">
-      <Icon name="check" size={18}/>
-      <p><b>Pagamento confirmado.</b> Obrigado pela compra! Você receberá os detalhes do pedido por e-mail.</p>
-      <button type="button" onClick={() => setVisible(false)} aria-label="Fechar aviso"><Icon name="plus" size={16}/></button>
-    </div>
+    <main className="confirmation-page">
+      <CheckoutBrand />
+      <section className="confirmation-card" aria-live="polite">
+        {!confirmation && !error && <><span className="confirmation-loader"/><h1>Confirmando seu pagamento…</h1><p>Estamos consultando a Stripe com segurança.</p></>}
+        {error && <><div className="confirmation-icon confirmation-icon--error">!</div><h1>Não foi possível confirmar agora.</h1><p>{error}</p><a className="button button--gold" href="/checkout">Voltar ao checkout <Icon name="arrow" size={18}/></a></>}
+        {confirmation && confirmation.paid && <><div className="confirmation-icon"><Icon name="check" size={30}/></div><p className="section-kicker">Pagamento confirmado</p><h1>Pedido recebido.<br/><em>Obrigado pela confiança.</em></h1><p>{confirmation.customerName ? `${confirmation.customerName}, o` : "O"} comprovante e os detalhes do pedido foram enviados para <b>{confirmation.email ?? "seu e-mail"}</b>.</p><div className="confirmation-summary"><span>{confirmation.quantity ?? 1}× Rubee Apis · 30 ml</span><strong>{amount}</strong></div><a className="button button--gold" href="/">Voltar ao site <Icon name="arrow" size={18}/></a></>}
+        {confirmation && !confirmation.paid && <><div className="confirmation-icon confirmation-icon--error">!</div><h1>Pagamento ainda não confirmado.</h1><p>A Stripe ainda não marcou esta sessão como paga. Nenhum pedido será considerado confirmado antes dessa validação.</p><a className="button button--gold" href="/checkout">Tentar novamente <Icon name="arrow" size={18}/></a></>}
+      </section>
+    </main>
   );
 }
 
 function App() {
   useReveal();
+  const path = window.location.pathname.replace(/\/+$/, "") || "/";
+  if (path === "/checkout") return <CheckoutPage />;
+  if (path === "/pedido-confirmado") return <OrderConfirmationPage />;
+
   return (
     <>
       <a className="skip-link" href="#conteudo">Pular para o conteúdo</a>
-      <SuccessBanner />
       <Header />
       <main id="conteudo">
         <Hero />
