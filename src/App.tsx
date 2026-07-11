@@ -182,7 +182,7 @@ function Origin() {
   return (
     <section className="origin" id="origem">
       <div className="origin-art">
-        <img src="/images/product-nature.webp" alt="Frasco de extrato de própolis vermelha Rubee Apis em ambiente natural" width="387" height="516" loading="lazy" />
+        <img src="/images/product-nature-hd.webp" alt="Frasco de extrato de própolis vermelha Rubee Apis em ambiente natural" width="1088" height="1456" loading="lazy" />
         <div className="origin-photo-caption"><Icon name="leaf" size={16}/><span>Fotografia do<br/><b>produto real</b></span></div>
       </div>
       <div className="origin-copy">
@@ -240,7 +240,7 @@ function Routine() {
           <div className="routine-ring"><span>Ritual<br/>diário</span></div>
           <img className="presenter-photo" src="/images/presenter.webp" alt="Apresentadora Rubee Apis indicando o produto" width="1386" height="1848" loading="lazy" />
           <div className="presenter-product-card" aria-hidden="true">
-            <img src="/images/product-packshot.webp" alt="" width="387" height="516" loading="lazy" />
+            <img src="/images/product-packshot-cutout.webp" alt="" width="387" height="516" loading="lazy" />
           </div>
           <div className="routine-quote"><Icon name="drop" size={18}/><p>Praticidade que<br/>cabe na rotina.</p></div>
         </div>
