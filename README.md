@@ -10,7 +10,7 @@ cp .env.example .env
 npm run dev
 ```
 
-Edite `VITE_CHECKOUT_URL` no arquivo `.env` com o endereço real do checkout. A quantidade escolhida pelo cliente é acrescentada ao link no parâmetro `quantity`.
+No pré-lançamento, deixe `VITE_CHECKOUT_URL` vazio e configure `VITE_WAITLIST_URL` com o endpoint que receberá os e-mails via `POST`. Quando as vendas abrirem, informe o endereço real do checkout em `VITE_CHECKOUT_URL`; a quantidade escolhida será acrescentada ao link no parâmetro `quantity`.
 
 ## Build
 
@@ -29,7 +29,7 @@ O resultado é gerado em `dist/`.
 2. Selecione o preset `Vite`.
 3. Use `npm run build` como comando de build.
 4. Use `dist` como diretório de saída.
-5. Cadastre `VITE_CHECKOUT_URL` em **Settings > Environment variables**.
+5. Cadastre `VITE_WAITLIST_URL` no pré-lançamento e `VITE_CHECKOUT_URL` quando a venda estiver ativa, em **Settings > Environment variables**.
 
 ### Wrangler
 
@@ -43,6 +43,7 @@ npm run deploy
 
 - Revisar e aprovar as fotografias do produto e da apresentadora antes da campanha final.
 - Configurar a URL real do checkout.
+- Conectar `VITE_WAITLIST_URL` a um serviço autorizado de captura de leads e publicar a política de privacidade antes de coletar e-mails.
 - Conferir no rótulo: ingredientes, concentração, graduação alcoólica, advertências e modo de uso.
 - Confirmar regras comerciais de frete, rastreamento e suporte.
 - Adicionar política de privacidade, termos, dados da empresa e canal de atendimento.
