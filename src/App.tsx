@@ -53,10 +53,10 @@ function BrandMark() {
 }
 
 const benefits = [
-  { icon: "drop" as const, number: "01", title: "Fácil de incluir", text: "O conta-gotas facilita a aplicação da quantidade indicada pelo fabricante, sem complicar o dia." },
+  { icon: "drop" as const, number: "01", title: "Fácil de incluir", text: "10 gotinhas por dia, sem gosto forte e sem complicação." },
   { icon: "leaf" as const, number: "02", title: "Brasileira na origem", text: "Própolis vermelha de origem apícola brasileira, apresentada com clareza e responsabilidade." },
-  { icon: "shield" as const, number: "03", title: "Confiável nos detalhes", text: "Embalagem identificada com lote, validade, orientações do fabricante e S.I.F. 3698." },
-  { icon: "bottle" as const, number: "04", title: "Simples de entender", text: "Frasco conta-gotas de 30 ml e embalagem individual para você saber exatamente o que recebe." },
+  { icon: "shield" as const, number: "03", title: "Clara para escolher", text: "Informações de uso, conservação, lote e validade reunidas na própria embalagem." },
+  { icon: "bottle" as const, number: "04", title: "Prática no dia a dia", text: "Uma apresentação compacta e fácil de manter por perto quando você precisar." },
 ];
 
 const faqs = [
@@ -159,9 +159,9 @@ function TrustStrip() {
     <section className="trust-strip" aria-label="Diferenciais da compra">
       <div className="container trust-grid">
         <div><Icon name="leaf"/><span><b>Origem</b>Própolis vermelha brasileira</span></div>
-        <div><Icon name="bottle"/><span><b>Conteúdo</b>Frasco conta-gotas de 30 ml</span></div>
-        <div><Icon name="shield"/><span><b>Inspeção</b>S.I.F. 3698 exibido no rótulo</span></div>
-        <div><Icon name="check"/><span><b>Informação</b>Uso conforme orientações do rótulo</span></div>
+        <div><Icon name="bottle"/><span><b>Praticidade</b>Conta-gotas para facilitar o uso</span></div>
+        <div><Icon name="shield"/><span><b>Clareza</b>Lote, validade e orientações na embalagem</span></div>
+        <div><Icon name="check"/><span><b>Confiança</b>Informações para escolher com tranquilidade</span></div>
       </div>
     </section>
   );
@@ -194,14 +194,14 @@ function Benefits() {
 function Origin() {
   return (
     <section className="origin" id="origem">
-      <div className="origin-art">
-        <img src="/images/product-nature-hd.webp" alt="Frasco de extrato de própolis vermelha Rubee Apis em ambiente natural" width="1088" height="1456" loading="lazy" />
-        <div className="origin-photo-caption"><Icon name="leaf" size={16}/><span>Fotografia do<br/><b>produto real</b></span></div>
+      <div className="origin-art origin-art--presenter">
+        <img className="origin-presenter" src="/images/presenter.webp" alt="Apresentadora Rubee Apis mostrando o produto" width="1386" height="1848" loading="lazy" />
+        <img className="origin-presenter-product" src="/images/product-packshot-cutout.webp" alt="Frasco e embalagem Rubee Apis" width="387" height="516" loading="lazy" />
       </div>
       <div className="origin-copy">
         <p className="section-kicker section-kicker--light">Origem brasileira</p>
         <h2>Uma origem que dá<br/><em>identidade a cada frasco.</em></h2>
-        <p>A própolis vermelha brasileira se distingue por sua coloração e pela relação com fontes botânicas encontradas em ecossistemas costeiros. Na Rubee Apis, essa matéria-prima é apresentada em um frasco de 30 ml pensado para facilitar sua presença no dia a dia.</p>
+        <p>A própolis vermelha brasileira se distingue por sua coloração e pela relação com fontes botânicas encontradas em ecossistemas costeiros. A Rubee Apis aproxima essa origem de uma experiência simples, prática e fácil de compreender.</p>
         <div className="specs">
           <div><span>Tipo</span><b>Extrato de própolis vermelha</b></div>
           <div><span>Conteúdo</span><b>30 ml</b></div>
@@ -242,7 +242,7 @@ function Routine() {
           <div className="routine-guidance"><Icon name="shield"/><p>O modo de uso completo será reproduzido aqui após a confirmação da documentação aprovada.</p></div>
         </div>
         <div className="routine-visual">
-          <img className="routine-photo" src="/images/product-nature-hd.webp" alt="Frasco Rubee Apis sobre uma superfície natural" width="1088" height="1456" loading="lazy" />
+          <img className="routine-photo" src="/images/hero-product.webp" alt="Frasco e embalagem Rubee Apis" width="1672" height="939" loading="lazy" />
           <div className="routine-quote"><Icon name="drop" size={18}/><p>Use somente conforme<br/>as instruções da embalagem.</p></div>
         </div>
       </div>
@@ -302,11 +302,11 @@ function Offer() {
         <div className="offer-story">
           <p className="section-kicker">Sua Rubee Apis</p>
           <h2>Uma escolha simples<br/><em>para levar com você.</em></h2>
-          <p>Você recebe um frasco conta-gotas de 30 ml e sua embalagem individual Rubee Apis, com as informações necessárias para conhecer o produto antes de utilizá-lo.</p>
+          <p>Uma forma simples de incluir a própolis vermelha brasileira no seu dia, com praticidade para usar e clareza para escolher.</p>
           <ul>
-            <li><Icon name="check" size={17}/> 1 frasco conta-gotas de 30 ml</li>
-            <li><Icon name="check" size={17}/> Embalagem individual Rubee Apis</li>
-            <li><Icon name="check" size={17}/> Rótulo com informações do produto</li>
+            <li><Icon name="check" size={17}/> 10 gotinhas por dia</li>
+            <li><Icon name="check" size={17}/> Sabor suave, sem gosto forte</li>
+            <li><Icon name="check" size={17}/> Conta-gotas prático para o dia a dia</li>
           </ul>
           <div className="offer-note"><Icon name="box"/><span><b>Opções de entrega</b>Prazo informado no checkout</span></div>
         </div>
@@ -394,7 +394,6 @@ function App() {
         <Benefits />
         <Offer />
         <TrustStrip />
-        <Quality />
         <Origin />
         <OriginScience />
         <Routine />
