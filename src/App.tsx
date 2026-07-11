@@ -100,10 +100,10 @@ const moments = [
 ];
 
 const scienceAreas = [
-  { title: "Defesas do organismo", text: "Pesquisadores investigam compostos da própolis vermelha em estudos sobre a resposta imune." },
-  { title: "Ação antioxidante", text: "Seus fenólicos e isoflavonoides são estudados em laboratório pela atividade contra radicais livres." },
-  { title: "Saúde bucal", text: "Extratos de própolis aparecem em pesquisas ligadas à higiene oral e ao equilíbrio da boca." },
-  { title: "Rotinas de bem-estar", text: "Presente há gerações nas rotinas brasileiras de cuidado natural, agora com origem identificada." },
+  { level: "Todos os dias", title: "Auxílio às defesas naturais", text: "A própolis é uma escolha tradicional de quem busca apoiar as defesas naturais do organismo e manter uma rotina de cuidado constante." },
+  { level: "Proteção diária", title: "Auxílio antioxidante", text: "Seus compostos fenólicos são estudados pelo potencial antioxidante — um cuidado associado à proteção das células contra os efeitos dos radicais livres." },
+  { level: "Mais equilíbrio", title: "Auxílio ao bem-estar do organismo", text: "A ciência investiga a relação entre os compostos da própolis e as respostas naturais do organismo ligadas ao equilíbrio e ao bem-estar." },
+  { level: "Cuidado completo", title: "Auxílio à saúde bucal", text: "A própolis também desperta interesse em pesquisas sobre o equilíbrio da boca, ampliando seu espaço nas rotinas de cuidado diário." },
 ];
 
 const ritualSteps = [
@@ -114,7 +114,7 @@ const ritualSteps = [
 
 const faqs = [
   { q: "O que é a Rubee Apis?", a: "Um extrato de própolis vermelha brasileira em gotas, com sabor suave e conta-gotas, criado para caber na sua rotina diária sem esforço." },
-  { q: "A própolis vermelha faz bem para quê?", a: "A própolis vermelha brasileira é uma das mais estudadas do mundo: pesquisas investigam seus compostos em áreas como resposta imune, ação antioxidante e saúde bucal. A Rubee Apis não é medicamento e não promete prevenir, tratar ou curar doenças — use conforme o rótulo." },
+  { q: "Quais benefícios são associados à própolis vermelha?", a: "A própolis vermelha é estudada pelo potencial de auxiliar as defesas naturais, a proteção antioxidante, o equilíbrio do organismo e o cuidado com a saúde bucal. A Rubee Apis é um alimento, não é medicamento e não substitui tratamentos." },
   { q: "O sabor é forte?", a: "Não. A Rubee Apis foi pensada para ter sabor suave, sem o gosto forte que costuma afastar as pessoas da própolis." },
   { q: "Como uso no dia a dia?", a: "Pingue a quantidade indicada no rótulo — o conta-gotas facilita a medida. Consulte sempre as orientações, restrições e conservação na embalagem." },
   { q: "O que vem na compra?", a: "Uma unidade Rubee Apis de 30 ml com conta-gotas, em sua embalagem individual." },
@@ -237,13 +237,14 @@ function Science() {
     <section className="section science" id="ciencia">
       <div className="container">
         <div className="section-heading section-heading--light" data-reveal>
-          <div><p className="section-kicker section-kicker--light">Onde a ciência olha</p><h2>Uma das própolis mais estudadas<br/><em>do mundo.</em></h2></div>
-          <p>A própolis vermelha brasileira, ligada à <i>Dalbergia ecastophyllum</i> do litoral, concentra isoflavonoides e compostos fenólicos que despertam o interesse de pesquisadores em diferentes áreas.</p>
+          <div><p className="section-kicker section-kicker--light">Benefícios para a vida real</p><h2>Mais motivos para fazer<br/><em>parte da sua rotina.</em></h2></div>
+          <p>A própolis vermelha brasileira reúne origem singular e compostos que despertam o interesse da ciência. Para você, isso se traduz em uma escolha natural pensada para acompanhar o cuidado de todos os dias.</p>
         </div>
         <div className="science-grid">
           {scienceAreas.map((area, index) => (
             <article className="science-card" key={area.title} data-reveal style={{ transitionDelay: `${index * 90}ms` }}>
               <span className="science-index">{String(index + 1).padStart(2, "0")}</span>
+              <small className="science-level">{area.level}</small>
               <h3>{area.title}</h3>
               <p>{area.text}</p>
             </article>
@@ -251,9 +252,13 @@ function Science() {
         </div>
         <div className="science-footnote" data-reveal>
           <Icon name="shield" size={18}/>
-          <p>A Rubee Apis não é medicamento, não substitui tratamentos e não promete prevenir, tratar ou curar doenças. Os estudos citados investigam a própolis vermelha em laboratório e não comprovam efeitos clínicos deste produto. Use conforme o rótulo.</p>
+          <p>Os benefícios apresentados refletem áreas de interesse científico relacionadas à própolis e não representam promessa de resultado individual. A Rubee Apis não é medicamento, não substitui tratamentos e não se destina a prevenir, tratar ou curar doenças. Use conforme o rótulo.</p>
         </div>
-        <div className="science-sources" data-reveal><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2529384/" target="_blank" rel="noreferrer">Estudo botânico <Icon name="arrow" size={14}/></a><a href="https://www.gov.br/anvisa/pt-br/assuntos/fiscalizacao-e-monitoramento/propaganda/propaganda" target="_blank" rel="noreferrer">Regras da Anvisa <Icon name="arrow" size={14}/></a></div>
+        <div className="science-sources" data-reveal><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2529384/" target="_blank" rel="noreferrer">Origem botânica <Icon name="arrow" size={14}/></a><a href="https://teses.usp.br/teses/disponiveis/64/64134/tde-04092013-140620/en.php" target="_blank" rel="noreferrer">Estudo antioxidante <Icon name="arrow" size={14}/></a><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6996680/" target="_blank" rel="noreferrer">Ensaio com dentifrício <Icon name="arrow" size={14}/></a><a href="https://pubmed.ncbi.nlm.nih.gov/34814913/" target="_blank" rel="noreferrer">Estudo antimicrobiano <Icon name="arrow" size={14}/></a><a href="https://www.gov.br/anvisa/pt-br/assuntos/fiscalizacao-e-monitoramento/propaganda/propaganda" target="_blank" rel="noreferrer">Regras da Anvisa <Icon name="arrow" size={14}/></a></div>
+        <div className="science-conversion" data-reveal>
+          <div><p className="section-kicker section-kicker--light">Um cuidado fácil de continuar</p><h3>Origem brasileira, sabor suave e benefícios que fazem sentido para a sua rotina.</h3></div>
+          <a className="button button--gold" href="#comprar">Quero Rubee Apis <Icon name="arrow" size={18}/></a>
+        </div>
       </div>
     </section>
   );
