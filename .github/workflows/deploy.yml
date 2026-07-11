@@ -22,5 +22,19 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           wranglerVersion: 4.110.0
           command: deploy
+      - name: Configure Stripe secrets on the deployed Worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+        run: |
+          printf '%s' "$STRIPE_SECRET_KEY" | npx wrangler secret put STRIPE_SECRET_KEY
+          printf '%s' "$STRIPE_WEBHOOK_SECRET" | npx wrangler secret put STRIPE_WEBHOOK_SECRET
       - name: Validate deployment
-        run: curl --fail --retry 5 --retry-delay 5 https://rubeeapis.ppverde66.workers.dev/
+        run: |
+          curl --fail --retry 5 --retry-delay 5 https://rubeeapis.ppverde66.workers.dev/
+          curl --fail --retry 5 --retry-delay 5 \
+            -H 'Content-Type: application/json' \
+            -d '{"quantity":1}' \
+            https://rubeeapis.ppverde66.workers.dev/api/checkout
