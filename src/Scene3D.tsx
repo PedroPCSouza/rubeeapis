@@ -4,27 +4,28 @@ import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 
 /**
- * Ambientação 3D do hero, desenhada a partir da identidade Rubee Apis:
- * — favos hexagonais dourados (a colmeia por trás da própolis);
- * — gotas de própolis vermelha em formato real de gota, com material de resina;
- * — pólen dourado em suspensão (shader com deriva ascendente e cintilação);
- * — feixes de luz de manhã, ecoando o "6h47, antes do café" da narrativa.
- * O produto em si é a foto real, renderizada em HTML sobre a cena.
+ * Ambientação 3D do hero — realismo apenas em elementos secundários:
+ * — gotas de resina de própolis (vidro rubi com absorção interna e clearcoat);
+ * — molduras hexagonais de ouro metálico com bisel, ecoando a colmeia;
+ * — grafismo de favo em linhas, pólen dourado em suspensão e feixes de luz.
+ * O frasco, o rótulo e as pessoas aparecem somente em fotografia real, no HTML.
  */
 
 const GOLD = new THREE.Color(0xc9a15a);
 const GOLD_LIGHT = new THREE.Color(0xe2c98f);
 
-/** Contorno de célula de favo (hexágono vazado, pointy-top). */
+function hexPoint(i: number, radius: number): [number, number] {
+  const a = (Math.PI / 3) * i + Math.PI / 6;
+  return [Math.cos(a) * radius, Math.sin(a) * radius];
+}
+
+/** Contorno de célula de favo (hexágono vazado, plano — camada gráfica). */
 function hexOutlineGeometry(outer: number, thickness: number) {
   const shape = new THREE.Shape();
   const hole = new THREE.Path();
   for (let i = 0; i < 6; i++) {
-    const a = (Math.PI / 3) * i + Math.PI / 6;
-    const xo = Math.cos(a) * outer;
-    const yo = Math.sin(a) * outer;
-    const xi = Math.cos(a) * (outer - thickness);
-    const yi = Math.sin(a) * (outer - thickness);
+    const [xo, yo] = hexPoint(i, outer);
+    const [xi, yi] = hexPoint(i, outer - thickness);
     if (i === 0) {
       shape.moveTo(xo, yo);
       hole.moveTo(xi, yi);
@@ -39,13 +40,11 @@ function hexOutlineGeometry(outer: number, thickness: number) {
   return new THREE.ShapeGeometry(shape);
 }
 
-/** Hexágono preenchido — célula "operculada" do favo. */
+/** Hexágono preenchido — célula "operculada" do favo, bem sutil. */
 function hexFillGeometry(outer: number) {
   const shape = new THREE.Shape();
   for (let i = 0; i < 6; i++) {
-    const a = (Math.PI / 3) * i + Math.PI / 6;
-    const x = Math.cos(a) * outer;
-    const y = Math.sin(a) * outer;
+    const [x, y] = hexPoint(i, outer);
     if (i === 0) shape.moveTo(x, y);
     else shape.lineTo(x, y);
   }
@@ -53,16 +52,46 @@ function hexFillGeometry(outer: number) {
   return new THREE.ShapeGeometry(shape);
 }
 
-/** Gota de própolis: perfil de lágrima revolucionado (base redonda, ápice fino). */
+/** Moldura hexagonal extrudada com bisel — pega reflexos como ouro polido. */
+function hexFrameGeometry(outer: number, thickness: number, depth: number) {
+  const shape = new THREE.Shape();
+  const hole = new THREE.Path();
+  for (let i = 0; i < 6; i++) {
+    const [xo, yo] = hexPoint(i, outer);
+    const [xi, yi] = hexPoint(i, outer - thickness);
+    if (i === 0) {
+      shape.moveTo(xo, yo);
+      hole.moveTo(xi, yi);
+    } else {
+      shape.lineTo(xo, yo);
+      hole.lineTo(xi, yi);
+    }
+  }
+  shape.closePath();
+  hole.closePath();
+  shape.holes.push(hole);
+  const geometry = new THREE.ExtrudeGeometry(shape, {
+    depth,
+    bevelEnabled: true,
+    bevelThickness: depth * 0.35,
+    bevelSize: depth * 0.35,
+    bevelSegments: 3,
+    curveSegments: 6,
+  });
+  geometry.center();
+  return geometry;
+}
+
+/** Gota de resina: perfil de lágrima revolucionado (base redonda, ápice fino). */
 function dropGeometry(radius: number) {
   const points: THREE.Vector2[] = [];
-  const steps = 26;
+  const steps = 40;
   for (let i = 0; i <= steps; i++) {
     const angle = (i / steps) * Math.PI;
     const r = Math.sin(angle) * Math.pow(Math.sin(angle / 2) || 0.0001, 0.55);
     points.push(new THREE.Vector2(r * radius, -Math.cos(angle) * radius * 1.4));
   }
-  return new THREE.LatheGeometry(points, 36);
+  return new THREE.LatheGeometry(points, 48);
 }
 
 const pollenVertex = /* glsl */ `
@@ -135,30 +164,30 @@ export default function Scene3D() {
     renderer.setSize(mount.clientWidth, mount.clientHeight);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 0.85;
+    renderer.toneMappingExposure = 0.9;
     mount.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(36, mount.clientWidth / mount.clientHeight, 0.1, 60);
     camera.position.set(0, 0, 8);
 
-    // Ambiente de estúdio para reflexos suaves na resina das gotas.
+    // Ambiente de estúdio: é ele que dá o realismo do vidro rubi e do ouro polido.
     const pmrem = new THREE.PMREMGenerator(renderer);
     const envTexture = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
     scene.environment = envTexture;
 
-    // --- Luz de manhã: quente vindo do alto-esquerdo, contorno vinho à direita ---
-    scene.add(new THREE.AmbientLight(0xffe8d0, 0.3));
-    scene.add(new THREE.HemisphereLight(0xf2d79b, 0x26070e, 0.55));
-    const key = new THREE.DirectionalLight(0xffedd2, 1.05);
+    // --- Luz de manhã: quente do alto-esquerdo, contorno vinho à direita ---
+    scene.add(new THREE.AmbientLight(0xffe8d0, 0.25));
+    scene.add(new THREE.HemisphereLight(0xf2d79b, 0x26070e, 0.5));
+    const key = new THREE.DirectionalLight(0xffedd2, 1.1);
     key.position.set(-4, 6, 5);
     scene.add(key);
-    const rim = new THREE.PointLight(0xb95542, 7, 16);
+    const rim = new THREE.PointLight(0xb95542, 6, 16);
     rim.position.set(4.5, 1.2, -2);
     scene.add(rim);
 
-    // --- Favos: clusters de células hexagonais douradas em profundidade ---
-    type Cell = { mesh: THREE.Mesh; material: THREE.MeshBasicMaterial; baseOpacity: number; seed: number };
+    // --- Favos gráficos: clusters de células hexagonais em linha, ao fundo ---
+    type Cell = { material: THREE.MeshBasicMaterial; baseOpacity: number; seed: number };
     const cells: Cell[] = [];
     const honeycombGroups: THREE.Group[] = [];
     const hexR = 0.62;
@@ -187,7 +216,7 @@ export default function Scene3D() {
         const material = new THREE.MeshBasicMaterial({
           color: i % 3 === 0 ? GOLD_LIGHT : GOLD,
           transparent: true,
-          opacity: 0.16 * depthFade * opacityScale,
+          opacity: 0.14 * depthFade * opacityScale,
           blending: THREE.AdditiveBlending,
           depthWrite: false,
           side: THREE.DoubleSide,
@@ -195,7 +224,7 @@ export default function Scene3D() {
         const cell = new THREE.Mesh(outlineGeo, material);
         cell.position.set(cx, cy, -i * 0.045);
         group.add(cell);
-        cells.push({ mesh: cell, material, baseOpacity: material.opacity, seed: i * 1.37 + position[0] });
+        cells.push({ material, baseOpacity: material.opacity, seed: i * 1.37 + position[0] });
 
         if (filledIndices.includes(i)) {
           const fillMaterial = new THREE.MeshBasicMaterial({
@@ -209,7 +238,7 @@ export default function Scene3D() {
           const fill = new THREE.Mesh(fillGeo, fillMaterial);
           fill.position.set(cx, cy, -i * 0.045 - 0.01);
           group.add(fill);
-          cells.push({ mesh: fill, material: fillMaterial, baseOpacity: fillMaterial.opacity, seed: i * 2.11 + 5 });
+          cells.push({ material: fillMaterial, baseOpacity: fillMaterial.opacity, seed: i * 2.11 + 5 });
         }
       }
       group.position.set(...position);
@@ -219,41 +248,73 @@ export default function Scene3D() {
       return group;
     }
 
-    buildHoneycomb([3.55, 0.35, -2.6], [0.08, -0.38, 0.06], isMobile ? 7 : 10, 1, [0, 3]);
-    if (!isMobile) buildHoneycomb([-4.9, -2.1, -3.6], [-0.05, 0.42, -0.1], 7, 0.55, [1]);
+    if (isMobile) {
+      // Em telas estreitas o frustum horizontal encolhe: favo menor e mais ao centro.
+      const cluster = buildHoneycomb([1.05, 2.3, -2.8], [0.08, -0.3, 0.06], 7, 0.85, [0, 3]);
+      cluster.scale.setScalar(0.72);
+    } else {
+      buildHoneycomb([3.55, 0.35, -2.6], [0.08, -0.38, 0.06], 10, 1, [0, 3]);
+      buildHoneycomb([-4.9, -2.1, -3.6], [-0.05, 0.42, -0.1], 7, 0.55, [1]);
+    }
 
-    // --- Gotas de própolis vermelha (lágrimas de resina) ---
-    const drops: THREE.Mesh[] = [];
-    const dropMat = new THREE.MeshPhysicalMaterial({
-      color: 0x7e1f2c,
-      emissive: 0x36060d,
-      emissiveIntensity: 0.35,
-      roughness: 0.12,
-      metalness: 0.0,
-      transmission: 0.35,
-      thickness: 0.6,
-      ior: 1.45,
-      transparent: true,
-      opacity: 0.9,
-      clearcoat: 1,
-      clearcoatRoughness: 0.08,
+    // --- Molduras hexagonais de ouro polido (realistas, com bisel) ---
+    const goldMat = new THREE.MeshPhysicalMaterial({
+      color: 0xcaa25c,
+      metalness: 1,
+      roughness: 0.26,
+      clearcoat: 0.4,
+      clearcoatRoughness: 0.25,
       envMapIntensity: 1.15,
     });
+    const frames: THREE.Mesh[] = [];
+    const frameConfigs: Array<{ pos: [number, number, number]; size: number; seed: number }> = isMobile
+      ? [{ pos: [1.15, -3.1, -1.8], size: 0.3, seed: 0.7 }]
+      : [
+          { pos: [3.05, 1.75, -1.5], size: 0.42, seed: 0.4 },
+          { pos: [4.55, -1.55, -2.3], size: 0.3, seed: 2.3 },
+          { pos: [-4.7, 2.15, -2.6], size: 0.26, seed: 4.1 },
+        ];
+    frameConfigs.forEach((config) => {
+      const frame = new THREE.Mesh(hexFrameGeometry(config.size, config.size * 0.16, config.size * 0.22), goldMat);
+      frame.position.set(...config.pos);
+      frame.rotation.set(0.35 + config.seed * 0.1, -0.5 + config.seed * 0.2, 0.1);
+      frame.userData = { seed: config.seed, baseY: config.pos[1] };
+      frames.push(frame);
+      scene.add(frame);
+    });
+
+    // --- Gotas de resina de própolis (vidro rubi com absorção interna) ---
+    const dropMat = new THREE.MeshPhysicalMaterial({
+      color: 0x9d2b38,
+      metalness: 0,
+      roughness: 0.06,
+      transmission: 0.85,
+      thickness: 1.1,
+      ior: 1.5,
+      attenuationColor: new THREE.Color(0x8f1f2d),
+      attenuationDistance: 0.55,
+      clearcoat: 1,
+      clearcoatRoughness: 0.04,
+      envMapIntensity: 1.3,
+    });
+    const drops: THREE.Mesh[] = [];
     const dropAnchors: Array<[number, number, number]> = [
-      [-5.1, 2.3, -1.2], [5.2, 2.5, -1.9], [-5.4, -2.5, -0.8],
-      [4.9, -2.3, -1.4], [2.6, 3.1, -3.1], [-2.6, -3.2, -2.4],
+      [-5.15, 2.35, -1.2], [5.25, 2.55, -1.9], [-5.4, -2.5, -0.8],
+      [4.95, -2.7, -1.3], [2.55, 3.15, -3.1], [-2.6, -3.25, -2.4],
     ];
-    const dropCount = isMobile ? 3 : 6;
-    for (let i = 0; i < dropCount; i++) {
-      const size = 0.11 + (i % 3) * 0.045;
+    const mobileDropAnchors: Array<[number, number, number]> = [
+      [-1.15, 3.2, -1.4], [1.2, -2.6, -1.1], [-1.05, -3.4, -2.2],
+    ];
+    const anchors = isMobile ? mobileDropAnchors : dropAnchors;
+    anchors.forEach(([x, y, z], i) => {
+      const size = 0.11 + (i % 3) * 0.04;
       const drop = new THREE.Mesh(dropGeometry(size), dropMat);
-      const [x, y, z] = dropAnchors[i];
       drop.position.set(x, y, z);
       drop.rotation.z = (i % 2 === 0 ? 1 : -1) * 0.08;
-      drop.userData = { seed: i * 1.73 + 0.5, baseX: x, baseY: y, baseScale: 1 };
+      drop.userData = { seed: i * 1.73 + 0.5, baseX: x, baseY: y };
       drops.push(drop);
       scene.add(drop);
-    }
+    });
 
     // --- Pólen dourado em suspensão (shader) ---
     const pollenCount = isMobile ? 70 : 170;
@@ -266,8 +327,8 @@ export default function Scene3D() {
       positions[i * 3 + 1] = (Math.random() - 0.5) * 9.2;
       positions[i * 3 + 2] = (Math.random() - 0.5) * 8 - 1;
       const isBokeh = Math.random() < 0.08;
-      sizes[i] = isBokeh ? 9 + Math.random() * 8 : 1.6 + Math.random() * 3.4;
-      alphas[i] = isBokeh ? 0.1 : 0.5 + Math.random() * 0.4;
+      sizes[i] = isBokeh ? 10 + Math.random() * 9 : 2.4 + Math.random() * 4.2;
+      alphas[i] = isBokeh ? 0.12 : 0.62 + Math.random() * 0.38;
       seeds[i] = Math.random();
     }
     const pollenGeo = new THREE.BufferGeometry();
@@ -336,11 +397,15 @@ export default function Scene3D() {
     };
     const onResize = () => {
       const { clientWidth, clientHeight } = mount;
-      camera.aspect = clientWidth / Math.max(clientHeight, 1);
+      if (clientWidth === 0 || clientHeight === 0) return;
+      camera.aspect = clientWidth / clientHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(clientWidth, clientHeight);
       if (reduceMotion) renderer.render(scene, camera);
     };
+    // ResizeObserver no mount: cobre mudanças de layout que não disparam resize da janela.
+    const resizeObserver = new ResizeObserver(onResize);
+    resizeObserver.observe(mount);
 
     const tick = () => {
       raf = requestAnimationFrame(tick);
@@ -361,8 +426,15 @@ export default function Scene3D() {
         drop.position.y = baseY + Math.sin(t * 0.3 + seed) * 0.12;
         drop.position.x = baseX + Math.cos(t * 0.2 + seed) * 0.06;
         drop.rotation.y = t * 0.22 + i;
-        const breathe = 1 + Math.sin(t * 0.55 + seed * 2) * 0.03;
+        const breathe = 1 + Math.sin(t * 0.55 + seed * 2) * 0.025;
         drop.scale.set(breathe, 1 / breathe, breathe);
+      });
+
+      frames.forEach((frame) => {
+        const { seed, baseY } = frame.userData as { seed: number; baseY: number };
+        frame.rotation.y = -0.5 + seed * 0.2 + t * 0.14;
+        frame.rotation.x = 0.35 + seed * 0.1 + Math.sin(t * 0.2 + seed) * 0.1;
+        frame.position.y = baseY + Math.sin(t * 0.26 + seed) * 0.09;
       });
 
       cells.forEach((cell) => {
@@ -370,7 +442,6 @@ export default function Scene3D() {
       });
       honeycombGroups.forEach((group, i) => {
         group.rotation.z = Math.sin(t * 0.1 + i * 1.8) * 0.04;
-        group.position.y += Math.sin(t * 0.22 + i * 2.6) * 0.0008;
       });
 
       shafts.forEach((shaft) => {
@@ -385,9 +456,10 @@ export default function Scene3D() {
     };
 
     window.addEventListener("resize", onResize);
+    // Primeiro frame síncrono: evita flash em branco antes do loop de animação.
+    pollenMat.uniforms.uTime.value = 12;
+    renderer.render(scene, camera);
     if (reduceMotion) {
-      pollenMat.uniforms.uTime.value = 12;
-      renderer.render(scene, camera);
       window.addEventListener("scroll", onScroll, { passive: true });
     } else {
       window.addEventListener("pointermove", onPointer, { passive: true });
@@ -397,6 +469,7 @@ export default function Scene3D() {
 
     return () => {
       cancelAnimationFrame(raf);
+      resizeObserver.disconnect();
       window.removeEventListener("resize", onResize);
       window.removeEventListener("pointermove", onPointer);
       window.removeEventListener("scroll", onScroll);

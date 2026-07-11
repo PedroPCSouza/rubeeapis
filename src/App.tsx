@@ -87,9 +87,9 @@ const moments = [
   },
   {
     icon: "leaf" as const,
-    kicker: "Do litoral brasileiro",
+    kicker: "Dos apiários de Alagoas",
     title: "Você sabe o que está tomando",
-    text: "Própolis vermelha brasileira, de origem identificada, com rótulo transparente. A escolha natural que você consegue reconhecer.",
+    text: "Própolis vermelha produzida em apiários alagoanos especializados, com origem identificada e uma história que você consegue reconhecer.",
   },
   {
     icon: "bottle" as const,
@@ -100,10 +100,10 @@ const moments = [
 ];
 
 const scienceAreas = [
-  { level: "Todos os dias", title: "Auxílio às defesas naturais", text: "A própolis é uma escolha tradicional de quem busca apoiar as defesas naturais do organismo e manter uma rotina de cuidado constante." },
-  { level: "Proteção diária", title: "Auxílio antioxidante", text: "Seus compostos fenólicos são estudados pelo potencial antioxidante — um cuidado associado à proteção das células contra os efeitos dos radicais livres." },
-  { level: "Mais equilíbrio", title: "Auxílio ao bem-estar do organismo", text: "A ciência investiga a relação entre os compostos da própolis e as respostas naturais do organismo ligadas ao equilíbrio e ao bem-estar." },
-  { level: "Cuidado completo", title: "Auxílio à saúde bucal", text: "A própolis também desperta interesse em pesquisas sobre o equilíbrio da boca, ampliando seu espaço nas rotinas de cuidado diário." },
+  { level: "Todos os dias", title: "Auxílio às defesas naturais", text: "Tradicionalmente presente nas rotinas de cuidado, a própolis é estudada por sua interação com as respostas naturais de defesa do organismo." },
+  { level: "Proteção diária", title: "Auxílio na proteção antioxidante", text: "Fenólicos e isoflavonoides presentes na própolis vermelha são estudados pelo potencial de auxiliar o organismo no combate ao excesso de radicais livres." },
+  { level: "Mais equilíbrio", title: "Auxílio ao equilíbrio inflamatório", text: "Compostos da própolis vermelha são investigados por sua participação nas respostas naturais relacionadas à inflamação e ao equilíbrio do organismo." },
+  { level: "Cuidado completo", title: "Auxílio no cuidado bucal", text: "A própolis vermelha também desperta interesse em pesquisas sobre o equilíbrio da boca e amplia seu espaço nas rotinas de cuidado diário." },
 ];
 
 const ritualSteps = [
@@ -178,9 +178,9 @@ function Hero() {
       <div className="hero-glow" />
       <div className="container hero-grid">
         <div className="hero-copy">
-          <p className="eyebrow"><span /> Própolis vermelha brasileira · extrato em gotas · 30 ml</p>
+          <p className="eyebrow"><span /> Própolis vermelha de Alagoas · extrato em gotas · 30 ml</p>
           <h1>Dez gotas.<br/><em>O resto do dia é seu.</em></h1>
-          <p className="hero-lead">O cuidado natural que cabe entre o despertador e o café: sabor suave, medida certa no conta-gotas e a própolis vermelha do litoral brasileiro.</p>
+          <p className="hero-lead">O cuidado natural que cabe entre o despertador e o café: sabor suave, medida certa no conta-gotas e própolis vermelha de apiários especializados de Alagoas.</p>
           <div className="hero-purchase">
             <div className="hero-price"><span>Rubee Apis · 30 ml</span><strong>R$ 119<sup>,90</sup></strong></div>
             <a className="button button--gold" href="#comprar">{ctaLabel} <Icon name="arrow" size={19}/></a>
@@ -237,8 +237,8 @@ function Science() {
     <section className="section science" id="ciencia">
       <div className="container">
         <div className="section-heading section-heading--light" data-reveal>
-          <div><p className="section-kicker section-kicker--light">Benefícios para a vida real</p><h2>Mais motivos para fazer<br/><em>parte da sua rotina.</em></h2></div>
-          <p>A própolis vermelha brasileira reúne origem singular e compostos que despertam o interesse da ciência. Para você, isso se traduz em uma escolha natural pensada para acompanhar o cuidado de todos os dias.</p>
+          <div><p className="section-kicker section-kicker--light">Benefícios para a vida real</p><h2>De Alagoas para fazer<br/><em>parte da sua rotina.</em></h2></div>
+          <p>Produzida em apiários alagoanos especializados, a própolis vermelha reúne origem singular e compostos que despertam o interesse da ciência — uma escolha natural pensada para o cuidado de todos os dias.</p>
         </div>
         <div className="science-grid">
           {scienceAreas.map((area, index) => (
@@ -294,13 +294,13 @@ function Origin() {
       </div>
       <div className="origin-copy" data-reveal>
         <p className="section-kicker section-kicker--light">Da origem para o seu dia</p>
-        <h2>Brasileira na origem.<br/><em>Sua na rotina.</em></h2>
-        <p>Do mangue do litoral brasileiro até o seu conta-gotas: a própolis vermelha chega com origem identificada, sabor suave e a praticidade que faz você continuar.</p>
+        <h2>Alagoana na origem.<br/><em>Sua na rotina.</em></h2>
+        <p>Dos apiários especializados de Alagoas até o seu conta-gotas: a própolis vermelha nasce em ecossistemas costeiros ligados à <i>Dalbergia ecastophyllum</i> e chega com sabor suave e a praticidade que faz você continuar.</p>
         <div className="specs">
           <div><span>Conteúdo</span><b>30 ml em gotas</b></div>
           <div><span>Experiência</span><b>Sabor suave</b></div>
           <div><span>Praticidade</span><b>Conta-gotas preciso</b></div>
-          <div><span>Origem</span><b>Litoral brasileiro</b></div>
+          <div><span>Origem</span><b>Apiários de Alagoas</b></div>
         </div>
         <a className="text-link" href="#comprar">Quero na minha rotina <Icon name="arrow" size={18}/></a>
       </div>
@@ -326,7 +326,7 @@ function Offer() {
           <ul>
             <li><Icon name="check" size={17}/> Gesto de segundos, todos os dias</li>
             <li><Icon name="check" size={17}/> Sabor suave, sem careta</li>
-            <li><Icon name="check" size={17}/> Origem brasileira identificada</li>
+            <li><Icon name="check" size={17}/> Origem alagoana identificada</li>
           </ul>
           <div className="offer-note"><Icon name="spark"/><span><b>Envio para todo o Brasil</b>Compra segura e rastreável</span></div>
         </div>
@@ -462,7 +462,7 @@ function CheckoutPage() {
         <aside className="checkout-summary" aria-label="Resumo do pedido">
           <div className="checkout-summary-product">
             <img src="/images/product-packshot-official.png" alt="Frasco e embalagem Rubee Apis" width="705" height="1199" />
-            <div><small>Extrato de própolis vermelha</small><h2>Rubee Apis · 30 ml</h2><p>Sabor suave · Conta-gotas · Origem brasileira</p></div>
+            <div><small>Extrato de própolis vermelha</small><h2>Rubee Apis · 30 ml</h2><p>Sabor suave · Conta-gotas · Origem alagoana</p></div>
           </div>
           <div className="checkout-quantity">
             <span>Quantidade</span>
