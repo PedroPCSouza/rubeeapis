@@ -4,7 +4,7 @@
   "compatibility_date": "2026-07-10",
   "main": "worker/index.ts",
   "vars": {
-    "STRIPE_PRICE_ID": "price_1Ts6L4JrPf6K4SGESHBEBNDy"
+    "STRIPE_PRICE_ID": "price_1Ts6a8JTbGF4OpC46dlKOfFL"
   },
   "assets": {
     "directory": "./dist",
