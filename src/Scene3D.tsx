@@ -1,91 +1,12 @@
 import { useEffect, useRef } from "react";
+
 import * as THREE from "three";
 
 /**
- * Cena 3D do frasco Rubee Apis, fiel ao produto real:
- * vidro âmbar, tampa conta-gotas preta e rótulo vinho com a
- * identidade da marca desenhada em canvas e aplicada como textura.
+ * Ambientação 3D do hero: partículas douradas em profundidade,
+ * gotas de própolis flutuando e parallax de câmera com o ponteiro.
+ * O produto em si é a foto real, renderizada em HTML sobre a cena.
  */
-
-const LABEL_W = 2048;
-const LABEL_H = 1024;
-
-function drawLabel(ctx: CanvasRenderingContext2D) {
-  const cx = LABEL_W / 2; // centro frontal do rótulo
-
-  // Fundo vinho com leve gradiente
-  const bg = ctx.createLinearGradient(0, 0, 0, LABEL_H);
-  bg.addColorStop(0, "#5a1b26");
-  bg.addColorStop(0.55, "#4b1420");
-  bg.addColorStop(1, "#3a0f18");
-  ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, LABEL_W, LABEL_H);
-
-  // Brilho sutil no centro frontal
-  const glow = ctx.createRadialGradient(cx, 420, 60, cx, 420, 640);
-  glow.addColorStop(0, "rgba(255, 200, 140, 0.07)");
-  glow.addColorStop(1, "rgba(255, 200, 140, 0)");
-  ctx.fillStyle = glow;
-  ctx.fillRect(0, 0, LABEL_W, LABEL_H);
-
-  // Arcos decorativos à direita
-  ctx.strokeStyle = "rgba(217, 173, 100, 0.22)";
-  ctx.lineWidth = 2.5;
-  for (let r = 70; r <= 230; r += 40) {
-    ctx.beginPath();
-    ctx.arc(cx + 470, 660, r, Math.PI * 1.15, Math.PI * 1.95);
-    ctx.stroke();
-  }
-
-  const cream = "#ecdcba";
-  const gold = "#d9ad64";
-
-  // Logotipo RU / BEE / APIS
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillStyle = cream;
-  try { ctx.letterSpacing = "26px"; } catch { /* opcional */ }
-  ctx.font = "400 132px 'DM Serif Display', Georgia, serif";
-  ctx.fillText("RU", cx, 218);
-  ctx.fillText("BEE", cx, 344);
-  try { ctx.letterSpacing = "30px"; } catch { /* opcional */ }
-  ctx.font = "600 40px 'DM Sans', Arial, sans-serif";
-  ctx.fillText("APIS", cx, 448);
-  try { ctx.letterSpacing = "0px"; } catch { /* opcional */ }
-
-  // extrato de própolis
-  ctx.fillStyle = gold;
-  ctx.font = "italic 400 62px 'DM Serif Display', Georgia, serif";
-  ctx.fillText("extrato", cx, 590);
-  ctx.fillText("de própolis", cx, 662);
-
-  // Selo "vermelha"
-  const badgeW = 280;
-  const badgeH = 62;
-  const badgeY = 712;
-  ctx.fillStyle = cream;
-  ctx.beginPath();
-  ctx.roundRect(cx - badgeW / 2, badgeY, badgeW, badgeH, 10);
-  ctx.fill();
-  ctx.fillStyle = "#4b1420";
-  ctx.font = "italic 400 42px 'DM Serif Display', Georgia, serif";
-  ctx.fillText("vermelha", cx, badgeY + badgeH / 2 + 2);
-
-  // 30ml
-  ctx.fillStyle = cream;
-  ctx.font = "500 34px 'DM Sans', Arial, sans-serif";
-  ctx.fillText("30ml", cx, 840);
-
-  // Faixa inferior
-  ctx.fillStyle = "#2c0a12";
-  ctx.fillRect(0, 924, LABEL_W, LABEL_H - 924);
-  ctx.fillStyle = gold;
-  try { ctx.letterSpacing = "10px"; } catch { /* opcional */ }
-  ctx.font = "600 30px 'DM Sans', Arial, sans-serif";
-  ctx.fillText("INDÚSTRIA BRASILEIRA", cx, 974);
-  try { ctx.letterSpacing = "0px"; } catch { /* opcional */ }
-}
-
 export default function Scene3D() {
   const mountRef = useRef<HTMLDivElement>(null);
 
@@ -103,102 +24,19 @@ export default function Scene3D() {
     mount.appendChild(renderer.domElement);
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(34, mount.clientWidth / mount.clientHeight, 0.1, 60);
-    camera.position.set(0, 0.25, 7.6);
+    const camera = new THREE.PerspectiveCamera(36, mount.clientWidth / mount.clientHeight, 0.1, 60);
+    camera.position.set(0, 0, 8);
 
     // --- Luzes ---
-    scene.add(new THREE.AmbientLight(0xffe8d0, 0.65));
-    const key = new THREE.DirectionalLight(0xfff2df, 2.6);
+    scene.add(new THREE.AmbientLight(0xffe8d0, 0.7));
+    const key = new THREE.DirectionalLight(0xfff2df, 1.8);
     key.position.set(4, 6, 6);
     scene.add(key);
-    const fill = new THREE.DirectionalLight(0xd9ad64, 0.5);
-    fill.position.set(-5, 2, 4);
-    scene.add(fill);
-    const rim = new THREE.PointLight(0xc9a15a, 20, 20);
+    const rim = new THREE.PointLight(0xc9a15a, 16, 22);
     rim.position.set(-5, 2.5, -3);
     scene.add(rim);
-    const under = new THREE.PointLight(0xa03040, 10, 14);
-    under.position.set(0.5, -4, 3);
-    scene.add(under);
 
-    // --- Frasco (vidro âmbar, proporções de conta-gotas 30 ml) ---
-    const bottle = new THREE.Group();
-
-    const glassProfile: THREE.Vector2[] = [
-      new THREE.Vector2(0.001, -1.55),
-      new THREE.Vector2(0.5, -1.55),
-      new THREE.Vector2(0.58, -1.5),
-      new THREE.Vector2(0.6, -1.38),
-      new THREE.Vector2(0.6, 0.72),
-      new THREE.Vector2(0.57, 0.92),
-      new THREE.Vector2(0.4, 1.1),
-      new THREE.Vector2(0.27, 1.18),
-      new THREE.Vector2(0.26, 1.3),
-    ];
-    const glassMat = new THREE.MeshPhysicalMaterial({
-      color: 0x7a3a16, // vidro âmbar
-      roughness: 0.08,
-      metalness: 0.05,
-      clearcoat: 1,
-      clearcoatRoughness: 0.1,
-      transparent: true,
-      opacity: 0.96,
-    });
-    bottle.add(new THREE.Mesh(new THREE.LatheGeometry(glassProfile, 64), glassMat));
-
-    // Líquido vermelho-escuro visível através do ombro
-    const liquidMat = new THREE.MeshStandardMaterial({
-      color: 0x6e1a22,
-      emissive: 0x400d14,
-      emissiveIntensity: 0.5,
-      roughness: 0.3,
-    });
-    const liquid = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 2.15, 48), liquidMat);
-    liquid.position.y = -0.4;
-    bottle.add(liquid);
-
-    // --- Rótulo (textura canvas fiel ao produto) ---
-    const labelCanvas = document.createElement("canvas");
-    labelCanvas.width = LABEL_W;
-    labelCanvas.height = LABEL_H;
-    const labelCtx = labelCanvas.getContext("2d");
-    if (labelCtx) drawLabel(labelCtx);
-    const labelTexture = new THREE.CanvasTexture(labelCanvas);
-    labelTexture.colorSpace = THREE.SRGBColorSpace;
-    labelTexture.anisotropy = renderer.capabilities.getMaxAnisotropy();
-    // Redesenha quando as fontes da página terminarem de carregar
-    if (document.fonts && labelCtx) {
-      document.fonts.ready.then(() => {
-        drawLabel(labelCtx);
-        labelTexture.needsUpdate = true;
-      });
-    }
-    const labelMat = new THREE.MeshStandardMaterial({
-      map: labelTexture,
-      roughness: 0.55,
-      metalness: 0.05,
-    });
-    const label = new THREE.Mesh(new THREE.CylinderGeometry(0.615, 0.615, 1.98, 64, 1, true), labelMat);
-    label.position.y = -0.36;
-    label.rotation.y = Math.PI; // centro do rótulo de frente para a câmera
-    bottle.add(label);
-
-    // --- Tampa conta-gotas preta ---
-    const capMat = new THREE.MeshStandardMaterial({ color: 0x121012, roughness: 0.5, metalness: 0.15 });
-    const collar = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.5, 48), capMat);
-    collar.position.y = 1.52;
-    bottle.add(collar);
-    const bulbBody = new THREE.Mesh(new THREE.CylinderGeometry(0.26, 0.26, 0.42, 40), capMat);
-    bulbBody.position.y = 1.98;
-    bottle.add(bulbBody);
-    const bulbTop = new THREE.Mesh(new THREE.SphereGeometry(0.26, 28, 20), capMat);
-    bulbTop.position.y = 2.19;
-    bottle.add(bulbTop);
-
-    bottle.position.y = -0.15;
-    scene.add(bottle);
-
-    // --- Gotas flutuantes ---
+    // --- Gotas de própolis flutuando em profundidade ---
     const drops: THREE.Mesh[] = [];
     const dropMat = new THREE.MeshStandardMaterial({
       color: 0xa32738,
@@ -206,24 +44,46 @@ export default function Scene3D() {
       emissiveIntensity: 0.8,
       roughness: 0.15,
     });
-    const dropCount = isMobile ? 4 : 7;
+    const dropCount = isMobile ? 5 : 10;
     for (let i = 0; i < dropCount; i++) {
-      const size = 0.05 + Math.random() * 0.09;
+      const size = 0.04 + Math.random() * 0.1;
       const drop = new THREE.Mesh(new THREE.SphereGeometry(size, 18, 14), dropMat);
-      const angle = (i / dropCount) * Math.PI * 2;
-      drop.position.set(Math.cos(angle) * (1.6 + Math.random() * 1.4), (Math.random() - 0.4) * 3.2, Math.sin(angle) * 1.4 - 0.4);
+      const angle = (i / dropCount) * Math.PI * 2 + Math.random();
+      drop.position.set(
+        Math.cos(angle) * (2 + Math.random() * 3),
+        (Math.random() - 0.5) * 5,
+        (Math.random() - 0.5) * 4 - 0.5
+      );
       drop.userData.seed = Math.random() * 10;
       drops.push(drop);
       scene.add(drop);
     }
 
+    // --- Bolhas douradas suaves (bokeh) ---
+    const bokehs: THREE.Mesh[] = [];
+    const bokehMat = new THREE.MeshBasicMaterial({
+      color: 0xc9a15a,
+      transparent: true,
+      opacity: 0.08,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    const bokehCount = isMobile ? 4 : 8;
+    for (let i = 0; i < bokehCount; i++) {
+      const bokeh = new THREE.Mesh(new THREE.SphereGeometry(0.35 + Math.random() * 0.7, 20, 16), bokehMat);
+      bokeh.position.set((Math.random() - 0.5) * 12, (Math.random() - 0.5) * 7, -2 - Math.random() * 4);
+      bokeh.userData.seed = Math.random() * 10;
+      bokehs.push(bokeh);
+      scene.add(bokeh);
+    }
+
     // --- Partículas douradas ---
-    const particleCount = isMobile ? 70 : 160;
+    const particleCount = isMobile ? 90 : 220;
     const positions = new Float32Array(particleCount * 3);
     for (let i = 0; i < particleCount; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 11;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 7;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 6 - 1;
+      positions[i * 3] = (Math.random() - 0.5) * 13;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 8;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 8 - 1;
     }
     const particleGeo = new THREE.BufferGeometry();
     particleGeo.setAttribute("position", new THREE.BufferAttribute(positions, 3));
@@ -266,15 +126,19 @@ export default function Scene3D() {
 
     const tick = () => {
       const t = clock.getElapsedTime();
-      // Oscila em vez de girar: o rótulo permanece legível
-      const targetY = Math.sin(t * 0.35) * 0.45 + pointerX * 0.5;
-      bottle.rotation.y += (targetY - bottle.rotation.y) * 0.05;
-      bottle.rotation.x += (pointerY * 0.1 + scrollP * 0.3 - bottle.rotation.x) * 0.05;
-      bottle.position.y = -0.15 + Math.sin(t * 0.9) * 0.09 - scrollP * 1.7;
+      // Parallax de câmera: profundidade sutil seguindo o ponteiro
+      camera.position.x += (pointerX * 0.6 - camera.position.x) * 0.04;
+      camera.position.y += (-pointerY * 0.4 - scrollP * 1.2 - camera.position.y) * 0.04;
+      camera.lookAt(0, -scrollP * 1.2, 0);
       drops.forEach((drop, i) => {
         const seed = drop.userData.seed as number;
-        drop.position.y += Math.sin(t * (0.6 + seed * 0.08) + seed) * 0.0035;
+        drop.position.y += Math.sin(t * (0.5 + seed * 0.08) + seed) * 0.004;
+        drop.position.x += Math.cos(t * 0.3 + seed) * 0.0015;
         drop.rotation.y = t * 0.4 + i;
+      });
+      bokehs.forEach((bokeh) => {
+        const seed = bokeh.userData.seed as number;
+        bokeh.position.y += Math.sin(t * 0.25 + seed) * 0.002;
       });
       particles.rotation.y = t * 0.02;
       renderer.render(scene, camera);
@@ -295,7 +159,6 @@ export default function Scene3D() {
       window.removeEventListener("resize", onResize);
       window.removeEventListener("pointermove", onPointer);
       window.removeEventListener("scroll", onScroll);
-      labelTexture.dispose();
       scene.traverse((object) => {
         if (object instanceof THREE.Mesh || object instanceof THREE.Points) {
           object.geometry.dispose();

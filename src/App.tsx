@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+
 import Scene3D from "./Scene3D";
 
 const PRICE = 119.9;
@@ -133,6 +134,44 @@ function Header() {
   );
 }
 
+function HeroProduct() {
+  const tiltRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = tiltRef.current;
+    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let raf = 0;
+    let targetX = 0;
+    let targetY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    const onMove = (event: PointerEvent) => {
+      targetX = (event.clientX / window.innerWidth) * 2 - 1;
+      targetY = (event.clientY / window.innerHeight) * 2 - 1;
+    };
+    const tick = () => {
+      currentX += (targetX - currentX) * 0.06;
+      currentY += (targetY - currentY) * 0.06;
+      el.style.transform = `perspective(1100px) rotateY(${currentX * 10}deg) rotateX(${-currentY * 7}deg)`;
+      raf = requestAnimationFrame(tick);
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
+    raf = requestAnimationFrame(tick);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("pointermove", onMove);
+    };
+  }, []);
+
+  return (
+    <div className="hero-product" ref={tiltRef}>
+      <img src="/images/product-bottle-official.png" alt="Frasco de Extrato de Própolis Vermelha Rubee Apis com conta-gotas" fetchPriority="high" />
+      <span className="hero-product-halo" aria-hidden="true" />
+      <span className="hero-product-shadow" aria-hidden="true" />
+    </div>
+  );
+}
+
 function Hero() {
   return (
     <section className="hero" id="inicio">
@@ -150,6 +189,7 @@ function Hero() {
           </div>
           <div className="micro-trust"><span><Icon name="spark" size={15}/> Sabor suave</span><span><Icon name="leaf" size={15}/> Origem brasileira</span><span><Icon name="lock" size={15}/> Compra segura</span></div>
         </div>
+        <HeroProduct />
         <div className="hero-side-note" aria-hidden="true"><span>01</span><i /> <p>NATURALMENTE<br/>BRASILEIRA</p></div>
       </div>
       <div className="scroll-cue" aria-hidden="true"><span>Descubra</span><i /></div>
