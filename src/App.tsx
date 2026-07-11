@@ -1,10 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import Scene3D from "./Scene3D";
 
 const PRICE = 119.9;
-const checkoutBaseUrl = import.meta.env.VITE_CHECKOUT_URL?.trim();
-const waitlistBaseUrl = import.meta.env.VITE_WAITLIST_URL?.trim();
 
 type IconName =
   | "arrow"
@@ -72,7 +70,7 @@ function useReveal() {
   }, []);
 }
 
-const ctaLabel = checkoutBaseUrl ? "Comprar agora" : "Quero a minha";
+const ctaLabel = "Comprar agora";
 
 const moments = [
   {
@@ -307,23 +305,29 @@ function Origin() {
 
 function Offer() {
   const [quantity, setQuantity] = useState(1);
-  const [waitlistMessage, setWaitlistMessage] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const total = PRICE * quantity;
-  const checkoutUrl = useMemo(() => {
-    if (!checkoutBaseUrl) return undefined;
-    try {
-      const url = new URL(checkoutBaseUrl);
-      url.searchParams.set("quantity", String(quantity));
-      return url.toString();
-    } catch {
-      return checkoutBaseUrl;
-    }
-  }, [quantity]);
 
-  const handleWaitlistSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (!waitlistBaseUrl) {
-      event.preventDefault();
-      setWaitlistMessage(true);
+  const handleBuy = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ quantity }),
+      });
+      const data = (await response.json()) as { url?: string; error?: string };
+      if (!response.ok || !data.url) {
+        setError(data.error ?? "Não foi possível iniciar o pagamento. Tente novamente.");
+        setLoading(false);
+        return;
+      }
+      window.location.href = data.url;
+    } catch {
+      setError("Não foi possível iniciar o pagamento. Verifique sua conexão e tente novamente.");
+      setLoading(false);
     }
   };
 
@@ -339,36 +343,27 @@ function Offer() {
             <li><Icon name="check" size={17}/> Sabor suave, sem careta</li>
             <li><Icon name="check" size={17}/> Origem brasileira identificada</li>
           </ul>
-          <div className="offer-note"><Icon name="spark"/><span><b>{checkoutUrl ? "Envio para todo o Brasil" : "Lançamento chegando"}</b>{checkoutUrl ? "Compra segura e rastreável" : "Entre na lista prioritária e compre antes de todo mundo"}</span></div>
+          <div className="offer-note"><Icon name="spark"/><span><b>Envio para todo o Brasil</b>Compra segura e rastreável</span></div>
         </div>
         <div className="buy-card" data-reveal>
           <div className="buy-card-top"><span>Rubee Apis</span><span>30 ml</span></div>
           <div className="buy-product"><img src="/images/product-packshot-official.png" alt="Frasco e embalagem do Extrato de Própolis Vermelha Rubee Apis" width="705" height="1199" loading="lazy" /></div>
           <div className="buy-info">
             <p>Rubee Apis · Própolis Vermelha</p>
-            <div className="buy-price"><span>{checkoutUrl ? "Total" : "Preço de lançamento"}</span><strong>{total.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</strong></div>
-            {checkoutUrl && <div className="quantity-row" role="group" aria-labelledby="quantity-label">
+            <div className="buy-price"><span>Total</span><strong>{total.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}</strong></div>
+            <div className="quantity-row" role="group" aria-labelledby="quantity-label">
               <span id="quantity-label">Quantidade</span>
               <div className="quantity-control">
                 <button type="button" onClick={() => setQuantity((value) => Math.max(1, value - 1))} aria-label="Diminuir quantidade"><Icon name="minus" size={17}/></button>
                 <output id="quantity" aria-live="polite">{quantity}</output>
                 <button type="button" onClick={() => setQuantity((value) => Math.min(10, value + 1))} aria-label="Aumentar quantidade"><Icon name="plus" size={17}/></button>
               </div>
-            </div>}
-            {checkoutUrl ? (
-              <a className="button button--wine button--full" href={checkoutUrl}>Comprar {quantity} {quantity === 1 ? "unidade" : "unidades"} <Icon name="arrow" size={19}/></a>
-            ) : (
-              <form className="waitlist-form" action={waitlistBaseUrl} method="post" onSubmit={handleWaitlistSubmit}>
-                <label htmlFor="waitlist-email">Seu melhor e-mail</label>
-                <div className="waitlist-fields">
-                  <input id="waitlist-email" name="email" type="email" autoComplete="email" placeholder="voce@exemplo.com" required />
-                  <button className="button button--wine" type="submit">Garantir prioridade <Icon name="arrow" size={19}/></button>
-                </div>
-                <input type="hidden" name="source" value="landing-page-rubee-apis" />
-              </form>
-            )}
-            {waitlistMessage && <p className="checkout-message" role="status">O canal de cadastro ainda não está conectado. Nenhuma informação foi enviada.</p>}
-            <p className="secure-line"><Icon name="lock" size={14}/> {checkoutUrl ? "Pagamento processado em ambiente seguro" : "Nenhuma cobrança agora"}</p>
+            </div>
+            <button className="button button--wine button--full" type="button" onClick={handleBuy} disabled={loading}>
+              {loading ? "Abrindo pagamento…" : <>Comprar {quantity} {quantity === 1 ? "unidade" : "unidades"} <Icon name="arrow" size={19}/></>}
+            </button>
+            {error && <p className="checkout-message" role="alert">{error}</p>}
+            <p className="secure-line"><Icon name="lock" size={14}/> Pagamento processado pela Stripe em ambiente seguro</p>
           </div>
         </div>
       </div>
@@ -421,11 +416,33 @@ function Footer() {
   );
 }
 
+function SuccessBanner() {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("compra") === "sucesso") {
+      setVisible(true);
+      window.history.replaceState(null, "", window.location.pathname);
+    }
+  }, []);
+
+  if (!visible) return null;
+  return (
+    <div className="success-banner" role="status">
+      <Icon name="check" size={18}/>
+      <p><b>Pagamento confirmado.</b> Obrigado pela compra! Você receberá os detalhes do pedido por e-mail.</p>
+      <button type="button" onClick={() => setVisible(false)} aria-label="Fechar aviso"><Icon name="plus" size={16}/></button>
+    </div>
+  );
+}
+
 function App() {
   useReveal();
   return (
     <>
       <a className="skip-link" href="#conteudo">Pular para o conteúdo</a>
+      <SuccessBanner />
       <Header />
       <main id="conteudo">
         <Hero />
@@ -439,7 +456,7 @@ function App() {
         <Closing />
       </main>
       <Footer />
-      <a className="mobile-buy" href="#comprar"><span><small>Rubee Apis · 30 ml</small>R$ 119,90</span><b>{checkoutBaseUrl ? "Comprar" : "Garantir"} <Icon name="arrow" size={17}/></b></a>
+      <a className="mobile-buy" href="#comprar"><span><small>Rubee Apis · 30 ml</small>R$ 119,90</span><b>Comprar <Icon name="arrow" size={17}/></b></a>
     </>
   );
 }

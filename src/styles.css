@@ -1047,6 +1047,47 @@ footer { background: var(--wine-black); color: rgba(252, 250, 246, 0.72); }
   color: rgba(252, 250, 246, 0.5);
 }
 
+.button:disabled {
+  opacity: 0.65;
+  cursor: wait;
+  transform: none;
+}
+
+/* ---------- Banner de compra confirmada ---------- */
+.success-banner {
+  position: fixed;
+  z-index: 120;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: min(560px, calc(100% - 32px));
+  padding: 14px 18px;
+  border-radius: 14px;
+  background: #1e3325;
+  border: 1px solid rgba(120, 200, 140, 0.4);
+  color: #dff2e2;
+  box-shadow: var(--shadow-deep);
+}
+
+.success-banner svg { color: #8ed6a0; flex-shrink: 0; }
+.success-banner p { margin: 0; font-size: 14px; line-height: 1.5; }
+.success-banner b { color: #fff; }
+
+.success-banner button {
+  display: inline-flex;
+  margin-left: auto;
+  padding: 6px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: #dff2e2;
+  cursor: pointer;
+  transform: rotate(45deg);
+}
+
 /* ---------- Mobile buy bar ---------- */
 .mobile-buy {
   position: fixed;
