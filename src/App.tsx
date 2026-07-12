@@ -181,8 +181,8 @@ function Hero() {
       <div className="container hero-grid">
         <div className="hero-copy">
           <p className="eyebrow"><span /> Cuidado diário de dentro para fora</p>
-          <h1>Mais proteção para o corpo.<br/><em>Mais confiança para viver o dia.</em></h1>
-          <p className="hero-lead">Própolis vermelha brasileira rica em compostos bioativos, para apoiar suas defesas naturais, a proteção antioxidante e o equilíbrio do organismo todos os dias.</p>
+          <h1>Mais proteção para o corpo.<br/><em>Confiança para viver o dia.</em></h1>
+          <p className="hero-lead">Própolis vermelha brasileira rica em flavonoides, bioativos para apoiar suas defesas naturais, a proteção antioxidante e o equilíbrio do organismo todos os dias.</p>
           <div className="hero-purchase">
             <div className="hero-price"><span>Rubee Apis · 30 ml</span><strong>R$ 119<sup>,90</sup></strong></div>
             <a className="button button--gold" href="#comprar">{ctaLabel} <Icon name="arrow" size={19}/></a>
@@ -202,8 +202,8 @@ function Identification() {
     <section className="section identification" id="dias-cheios" aria-labelledby="identification-title">
       <div className="container identification-inner" data-reveal>
         <p className="section-kicker">Feita para quem vive dias cheios</p>
-        <h2 id="identification-title">Você não procura mais uma promessa.<br/><em>Procura algo que caiba no seu dia.</em></h2>
-        <p>Depois de conhecer a origem, os benefícios e o ritual, o que importa é simples: conseguir continuar. Rotinas de cuidado costumam falhar quando exigem gosto forte, preparo, lembrete e esforço demais.</p>
+        <h2 id="identification-title">Saúde. Pele. Cabelo.<br/><em>Em gotas que cabe no seu dia.</em></h2>
+        <p>Depois de conhecer a origem, os benefícios e o ritual, o que importa é simples: continuar. Rotinas de cuidado costumam falhar quando exigem esforço, preparo, lembrete e dificuldade demais.</p>
         <p>A Rubee Apis foi desenhada a partir da vida real. Um gesto de segundos, agradável o bastante para você querer repetir amanhã.</p>
       </div>
     </section>
