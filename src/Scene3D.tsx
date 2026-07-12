@@ -82,7 +82,7 @@ function hexFrameGeometry(outer: number, thickness: number, depth: number) {
   return geometry;
 }
 
-/** Gota de resina: perfil de lágrima revolucionado (base redonda, ápice fino). */
+/** Gota de resina caindo: corpo arredondado em cima, ápice fino para baixo. */
 function dropGeometry(radius: number) {
   const points: THREE.Vector2[] = [];
   const steps = 40;
@@ -91,7 +91,9 @@ function dropGeometry(radius: number) {
     const r = Math.sin(angle) * Math.pow(Math.sin(angle / 2) || 0.0001, 0.55);
     points.push(new THREE.Vector2(r * radius, -Math.cos(angle) * radius * 1.4));
   }
-  return new THREE.LatheGeometry(points, 48);
+  const geometry = new THREE.LatheGeometry(points, 48);
+  geometry.rotateZ(Math.PI);
+  return geometry;
 }
 
 const pollenVertex = /* glsl */ `
