@@ -74,36 +74,38 @@ const ctaLabel = "Comprar agora";
 
 const moments = [
   {
-    icon: "sun" as const,
-    kicker: "6h47 · antes do café",
-    title: "Começa fácil",
-    text: "Dez gotas entre o despertador e o café. Sabor suave, sem careta, sem preparo. Em segundos, o cuidado do dia já aconteceu.",
+    icon: "shield" as const,
+    kicker: "Defesas naturais",
+    title: "Imunidade mais bem cuidada",
+    text: "Compostos bioativos da própolis vermelha são estudados por sua relação com a modulação das respostas naturais de defesa do organismo.",
   },
   {
-    icon: "drop" as const,
-    kicker: "Todos os dias · mesma medida",
-    title: "Continua sem esforço",
-    text: "O conta-gotas entrega sempre a mesma quantidade indicada no rótulo. Nada de adivinhar, nada de desperdiçar.",
+    icon: "spark" as const,
+    kicker: "Proteção celular",
+    title: "Ação antioxidante no dia a dia",
+    text: "Polifenóis e isoflavonoides ajudam o organismo a lidar com o excesso de radicais livres e com o estresse oxidativo.",
   },
   {
     icon: "leaf" as const,
-    kicker: "Dos apiários de Alagoas",
-    title: "Você sabe o que está tomando",
-    text: "Própolis vermelha produzida em apiários alagoanos especializados, com origem identificada e uma história que você consegue reconhecer.",
+    kicker: "Equilíbrio do organismo",
+    title: "Suporte às respostas inflamatórias",
+    text: "A ciência investiga como os compostos da própolis vermelha participam dos processos naturais ligados à inflamação e ao equilíbrio corporal.",
   },
   {
-    icon: "bottle" as const,
-    kicker: "30 ml · onde você for",
-    title: "Cabe na sua vida",
-    text: "Um frasco pequeno que acompanha a rotina inteira: a semana corrida, a mochila da viagem, a mesa de cabeceira.",
+    icon: "sun" as const,
+    kicker: "Rotina ativa",
+    title: "Cuidado para quem exige mais do corpo",
+    text: "Em períodos de treino intenso, a própolis é pesquisada por seu potencial antioxidante e por sua relação com recuperação e proteção celular.",
   },
 ];
 
 const scienceAreas = [
-  { level: "Todos os dias", title: "Apoio às defesas naturais", text: "Tradicionalmente presente nas rotinas de cuidado, a própolis é estudada pela forma como seus compostos interagem com as respostas naturais de defesa do organismo." },
-  { level: "Proteção diária", title: "Apoio antioxidante", text: "Fenólicos e isoflavonoides da própolis vermelha são estudados pelo potencial de ajudar o organismo a lidar com o excesso de radicais livres." },
-  { level: "Mais equilíbrio", title: "Apoio ao equilíbrio inflamatório", text: "Pesquisas investigam como os compostos da própolis vermelha participam das respostas naturais ligadas à inflamação e ao equilíbrio do organismo." },
-  { level: "Cuidado completo", title: "Apoio à saúde bucal", text: "A própolis vermelha também é estudada por sua relação com o equilíbrio da boca, ampliando seu espaço nas rotinas de cuidado diário." },
+  { level: "Defesa", title: "Imunidade", text: "Apoia as respostas naturais de defesa e é estudada por sua atuação imunomoduladora." },
+  { level: "Proteção", title: "Ação antioxidante", text: "Seus polifenóis e isoflavonoides ajudam a proteger as células contra o estresse oxidativo." },
+  { level: "Equilíbrio", title: "Resposta inflamatória", text: "Compostos da própolis vermelha são investigados por sua participação no equilíbrio dos processos inflamatórios." },
+  { level: "Movimento", title: "Rotina e recuperação", text: "Seu potencial antioxidante é estudado em contextos de esforço físico, fadiga e recuperação do organismo." },
+  { level: "Metabolismo", title: "Equilíbrio metabólico", text: "Pesquisas avaliam sua relação com parâmetros de glicose, lipídios e metabolismo energético." },
+  { level: "Cuidado", title: "Saúde bucal", text: "Também é pesquisada por sua atividade contra microrganismos e por seu papel no equilíbrio da boca." },
 ];
 
 const ritualSteps = [
@@ -178,14 +180,14 @@ function Hero() {
       <div className="hero-glow" />
       <div className="container hero-grid">
         <div className="hero-copy">
-          <p className="eyebrow"><span /> Própolis vermelha de Alagoas · extrato em gotas · 30 ml</p>
-          <h1>Dez gotas.<br/><em>O resto do dia é seu.</em></h1>
-          <p className="hero-lead">O cuidado natural que cabe entre o despertador e o café: sabor suave, medida certa no conta-gotas e própolis vermelha de apiários especializados de Alagoas.</p>
+          <p className="eyebrow"><span /> Cuidado diário de dentro para fora</p>
+          <h1>Mais proteção para o corpo.<br/><em>Mais confiança para viver o dia.</em></h1>
+          <p className="hero-lead">Própolis vermelha brasileira rica em compostos bioativos, para apoiar suas defesas naturais, a proteção antioxidante e o equilíbrio do organismo todos os dias.</p>
           <div className="hero-purchase">
             <div className="hero-price"><span>Rubee Apis · 30 ml</span><strong>R$ 119<sup>,90</sup></strong></div>
             <a className="button button--gold" href="#comprar">{ctaLabel} <Icon name="arrow" size={19}/></a>
           </div>
-          <div className="micro-trust"><span><Icon name="spark" size={15}/> Sabor suave</span><span><Icon name="leaf" size={15}/> Origem brasileira</span><span><Icon name="lock" size={15}/> Compra segura</span></div>
+          <div className="micro-trust"><span><Icon name="shield" size={15}/> Apoio à imunidade</span><span><Icon name="spark" size={15}/> Ação antioxidante</span><span><Icon name="leaf" size={15}/> Própolis de Alagoas</span></div>
         </div>
         <HeroProduct />
         <div className="hero-side-note" aria-hidden="true"><span>01</span><i /> <p>NATURALMENTE<br/>BRASILEIRA</p></div>
@@ -213,8 +215,8 @@ function Moments() {
     <section className="section moments" id="mudancas">
       <div className="container">
         <div className="section-heading" data-reveal>
-          <div><p className="section-kicker">O que muda pra você</p><h2>Pequeno no gesto.<br/><em>Presente o dia inteiro.</em></h2></div>
-          <p>Quatro momentos em que a Rubee Apis trabalha a seu favor — sem pedir quase nada em troca.</p>
+          <div><p className="section-kicker">O que você busca sentir</p><h2>Seu corpo apoiado.<br/><em>Sua rotina em movimento.</em></h2></div>
+          <p>Benefícios que fazem sentido para quem quer cuidar da saúde, manter o ritmo e envelhecer com mais equilíbrio.</p>
         </div>
         <div className="moment-grid">
           {moments.map((moment, index) => (
@@ -237,8 +239,8 @@ function Science() {
     <section className="section science" id="beneficios">
       <div className="container">
         <div className="section-heading section-heading--light" data-reveal>
-          <div><p className="section-kicker section-kicker--light">Benefícios para a vida real</p><h2>De Alagoas para fazer<br/><em>parte da sua rotina.</em></h2></div>
-          <p>Produzida em apiários alagoanos especializados, a própolis vermelha nasce da relação das abelhas com o rabo-de-bugio (<i>Dalbergia ecastophyllum</i>) e reúne compostos que despertam o interesse da ciência.</p>
+          <div><p className="section-kicker section-kicker--light">Benefícios para a vida real</p><h2>Um cuidado.<br/><em>Várias formas de apoiar você.</em></h2></div>
+          <p>A própolis vermelha reúne polifenóis e isoflavonoides estudados por sua atuação em diferentes processos naturais do organismo.</p>
         </div>
         <div className="science-grid">
           {scienceAreas.map((area, index) => (
@@ -256,8 +258,8 @@ function Science() {
         </div>
         <div className="science-sources" data-reveal><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2529384/" target="_blank" rel="noreferrer">Origem botânica <Icon name="arrow" size={14}/></a><a href="https://teses.usp.br/teses/disponiveis/64/64134/tde-04092013-140620/en.php" target="_blank" rel="noreferrer">Estudo antioxidante <Icon name="arrow" size={14}/></a><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6996680/" target="_blank" rel="noreferrer">Ensaio com dentifrício <Icon name="arrow" size={14}/></a><a href="https://pubmed.ncbi.nlm.nih.gov/34814913/" target="_blank" rel="noreferrer">Estudo antimicrobiano <Icon name="arrow" size={14}/></a><a href="https://www.gov.br/anvisa/pt-br/assuntos/fiscalizacao-e-monitoramento/propaganda/propaganda" target="_blank" rel="noreferrer">Regras da Anvisa <Icon name="arrow" size={14}/></a></div>
         <div className="science-conversion" data-reveal>
-          <div><p className="section-kicker section-kicker--light">Um cuidado fácil de continuar</p><h3>Origem brasileira, sabor suave e benefícios que fazem sentido para a sua rotina.</h3></div>
-          <a className="button button--gold" href="#origem">Conheça a origem <Icon name="arrow" size={18}/></a>
+          <div><p className="section-kicker section-kicker--light">Proteção que acompanha sua rotina</p><h3>Um gesto simples para apoiar o que seu corpo faz por você todos os dias.</h3></div>
+          <a className="button button--gold" href="#comprar">Quero cuidar de mim <Icon name="arrow" size={18}/></a>
         </div>
       </div>
     </section>
@@ -321,12 +323,12 @@ function Offer() {
       <div className="container offer-grid">
         <div className="offer-story" data-reveal>
           <p className="section-kicker">Sua Rubee Apis</p>
-          <h2>Amanhã de manhã,<br/><em>dez gotas já podem ser suas.</em></h2>
-          <p>Um frasco de 30 ml acompanha semanas de rotina. Garanta o seu e descubra como um cuidado pode ser simples de manter.</p>
+          <h2>Cuide hoje<br/><em>do corpo que acompanha você.</em></h2>
+          <p>Inclua a própolis vermelha na sua rotina e transforme um gesto simples em cuidado diário com suas defesas e sua proteção antioxidante.</p>
           <ul>
-            <li><Icon name="check" size={17}/> Gesto de segundos, todos os dias</li>
-            <li><Icon name="check" size={17}/> Sabor suave, sem careta</li>
-            <li><Icon name="check" size={17}/> Origem alagoana identificada</li>
+            <li><Icon name="check" size={17}/> Apoio diário às defesas naturais</li>
+            <li><Icon name="check" size={17}/> Compostos com ação antioxidante</li>
+            <li><Icon name="check" size={17}/> Própolis vermelha de origem alagoana</li>
           </ul>
           <div className="offer-note"><Icon name="spark"/><span><b>Envio para todo o Brasil</b>Compra segura e rastreável</span></div>
         </div>
@@ -380,7 +382,7 @@ function Closing() {
       <div className="container closing-inner" data-reveal>
         <BrandMark />
         <p>Rubee Apis · Própolis vermelha brasileira</p>
-        <h2>Amanhã, dez gotas.<br/><em>Comece hoje.</em></h2>
+        <h2>Seu cuidado começa por dentro.<br/><em>Comece hoje.</em></h2>
         <a className="button button--gold" href="#comprar">{ctaLabel} <Icon name="arrow" size={19}/></a>
       </div>
     </section>
