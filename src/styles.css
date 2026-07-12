@@ -576,9 +576,26 @@ h1 em, h2 em { font-style: italic; color: var(--gold); }
 /* ---------- Science ---------- */
 .science {
   color: var(--white);
+  border-top: 1px solid rgba(226, 201, 143, 0.16);
   background:
     radial-gradient(900px 560px at 82% 10%, rgba(163, 39, 56, 0.3), transparent 60%),
     linear-gradient(160deg, var(--wine-deep), var(--wine-black));
+}
+
+.hero + .science {
+  position: relative;
+  margin-top: -1px;
+}
+
+.hero + .science::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: min(1180px, calc(100% - 48px));
+  height: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, transparent, rgba(226, 201, 143, 0.4), transparent);
 }
 
 .science h2 { color: var(--white); }
@@ -760,6 +777,7 @@ h1 em, h2 em { font-style: italic; color: var(--gold); }
   align-items: stretch;
   color: var(--white);
   background: linear-gradient(150deg, var(--wine), var(--wine-deep));
+  border-top: 1px solid rgba(226, 201, 143, 0.14);
 }
 
 .origin-art { position: relative; min-height: 480px; overflow: hidden; }

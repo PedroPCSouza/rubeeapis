@@ -197,12 +197,12 @@ function Hero() {
 
 function Identification() {
   return (
-    <section className="section identification" aria-labelledby="identification-title">
+    <section className="section identification" id="dias-cheios" aria-labelledby="identification-title">
       <div className="container identification-inner" data-reveal>
         <p className="section-kicker">Feita para quem vive dias cheios</p>
         <h2 id="identification-title">Você não procura mais uma promessa.<br/><em>Procura algo que caiba no seu dia.</em></h2>
-        <p>Rotinas de cuidado costumam falhar no mesmo ponto: exigem demais. Gosto forte, preparo, lembrete, esforço.</p>
-        <p>A Rubee Apis foi desenhada de trás pra frente — a partir do seu dia. Um gesto de segundos, agradável o bastante para você querer repetir amanhã.</p>
+        <p>Depois de conhecer a origem, os benefícios e o ritual, o que importa é simples: conseguir continuar. Rotinas de cuidado costumam falhar quando exigem gosto forte, preparo, lembrete e esforço demais.</p>
+        <p>A Rubee Apis foi desenhada a partir da vida real. Um gesto de segundos, agradável o bastante para você querer repetir amanhã.</p>
       </div>
     </section>
   );
@@ -210,7 +210,7 @@ function Identification() {
 
 function Moments() {
   return (
-    <section className="section moments" id="beneficios">
+    <section className="section moments" id="mudancas">
       <div className="container">
         <div className="section-heading" data-reveal>
           <div><p className="section-kicker">O que muda pra você</p><h2>Pequeno no gesto.<br/><em>Presente o dia inteiro.</em></h2></div>
@@ -234,7 +234,7 @@ function Moments() {
 
 function Science() {
   return (
-    <section className="section science" id="ciencia">
+    <section className="section science" id="beneficios">
       <div className="container">
         <div className="section-heading section-heading--light" data-reveal>
           <div><p className="section-kicker section-kicker--light">Benefícios para a vida real</p><h2>De Alagoas para fazer<br/><em>parte da sua rotina.</em></h2></div>
@@ -257,7 +257,7 @@ function Science() {
         <div className="science-sources" data-reveal><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2529384/" target="_blank" rel="noreferrer">Origem botânica <Icon name="arrow" size={14}/></a><a href="https://teses.usp.br/teses/disponiveis/64/64134/tde-04092013-140620/en.php" target="_blank" rel="noreferrer">Estudo antioxidante <Icon name="arrow" size={14}/></a><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6996680/" target="_blank" rel="noreferrer">Ensaio com dentifrício <Icon name="arrow" size={14}/></a><a href="https://pubmed.ncbi.nlm.nih.gov/34814913/" target="_blank" rel="noreferrer">Estudo antimicrobiano <Icon name="arrow" size={14}/></a><a href="https://www.gov.br/anvisa/pt-br/assuntos/fiscalizacao-e-monitoramento/propaganda/propaganda" target="_blank" rel="noreferrer">Regras da Anvisa <Icon name="arrow" size={14}/></a></div>
         <div className="science-conversion" data-reveal>
           <div><p className="section-kicker section-kicker--light">Um cuidado fácil de continuar</p><h3>Origem brasileira, sabor suave e benefícios que fazem sentido para a sua rotina.</h3></div>
-          <a className="button button--gold" href="#comprar">Quero Rubee Apis <Icon name="arrow" size={18}/></a>
+          <a className="button button--gold" href="#origem">Conheça a origem <Icon name="arrow" size={18}/></a>
         </div>
       </div>
     </section>
@@ -302,7 +302,7 @@ function Origin() {
           <div><span>Praticidade</span><b>Conta-gotas preciso</b></div>
           <div><span>Origem</span><b>Apiários de Alagoas</b></div>
         </div>
-        <a className="text-link" href="#comprar">Quero na minha rotina <Icon name="arrow" size={18}/></a>
+        <a className="text-link" href="#mudancas">Veja o que muda para você <Icon name="arrow" size={18}/></a>
       </div>
     </section>
   );
@@ -542,12 +542,12 @@ function App() {
       <Header />
       <main id="conteudo">
         <Hero />
-        <Identification />
-        <Moments />
         <Science />
-        <Ritual />
         <Origin />
+        <Moments />
         <Offer />
+        <Ritual />
+        <Identification />
         <FAQ />
         <Closing />
       </main>
