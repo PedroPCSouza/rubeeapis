@@ -2,7 +2,41 @@ import { useEffect, useRef, useState } from "react";
 
 import Scene3D from "./Scene3D";
 
-const PRICE = 119.9;
+const PRICE = 119.9; // preço único de toda a linha Rubee Apis
+const formatBRL = (value: number) => value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+
+type ProductId = "vermelha" | "capsula" | "verde" | "blend";
+
+const CHECKOUT_PRODUCTS: Record<ProductId, { name: string; subtitle: string; image: string; alt: string }> = {
+  vermelha: {
+    name: "Rubee Apis · Própolis Vermelha",
+    subtitle: "Extrato · 30 ml · conta-gotas",
+    image: "/images/product-packshot-official.png",
+    alt: "Frasco e embalagem do Extrato de Própolis Vermelha Rubee Apis",
+  },
+  capsula: {
+    name: "Rubee Apis · Própolis Vermelha em Cápsulas",
+    subtitle: "60 cápsulas · óleo de linhaça e coco",
+    image: "/images/capsula-vermelha.webp",
+    alt: "Pote de Própolis Vermelha em cápsulas Rubee Apis",
+  },
+  verde: {
+    name: "Rubee Apis · Própolis Verde",
+    subtitle: "Extrato · 30 ml · conta-gotas",
+    image: "/images/verde.webp",
+    alt: "Frasco e embalagem do Extrato de Própolis Verde Rubee Apis",
+  },
+  blend: {
+    name: "Rubee Apis · Blend Verde + Vermelha",
+    subtitle: "Extrato · 30 ml · conta-gotas",
+    image: "/images/blend.webp",
+    alt: "Frasco e embalagem do Blend de própolis verde e vermelha Rubee Apis",
+  },
+};
+
+function resolveProduct(value: string | null): ProductId {
+  return value && value in CHECKOUT_PRODUCTS ? (value as ProductId) : "vermelha";
+}
 
 type IconName =
   | "arrow"
@@ -121,6 +155,33 @@ const faqs = [
   { q: "Como uso no dia a dia?", a: "Pingue a quantidade indicada no rótulo — o conta-gotas facilita a medida. Consulte sempre as orientações, restrições e conservação na embalagem." },
   { q: "O que vem na compra?", a: "Uma unidade Rubee Apis de 30 ml com conta-gotas, em sua embalagem individual." },
   { q: "Como devo conservar?", a: "Siga as condições de conservação indicadas na embalagem e mantenha o produto em local adequado." },
+];
+
+const lineup: { id: ProductId; image: string; tag: string; name: string; text: string; meta: string }[] = [
+  {
+    id: "capsula",
+    image: "/images/capsula-vermelha.webp",
+    tag: "Cápsulas",
+    name: "Própolis Vermelha em Cápsulas",
+    text: "A mesma própolis vermelha de Alagoas, agora em cápsulas com óleo de linhaça e óleo de coco — praticidade para levar no dia a dia.",
+    meta: "60 cápsulas",
+  },
+  {
+    id: "verde",
+    image: "/images/verde.webp",
+    tag: "Extrato",
+    name: "Extrato de Própolis Verde",
+    text: "A clássica própolis verde brasileira em gotas, reconhecida por seus flavonoides e pela tradição em apoiar as defesas naturais.",
+    meta: "30 ml · conta-gotas",
+  },
+  {
+    id: "blend",
+    image: "/images/blend.webp",
+    tag: "Blend",
+    name: "Blend Verde + Vermelha",
+    text: "O encontro das duas própolis em um só extrato, combinando os bioativos da verde e da vermelha em gotas de sabor equilibrado.",
+    meta: "30 ml · conta-gotas",
+  },
 ];
 
 function Header() {
@@ -315,7 +376,7 @@ function Offer() {
   const total = PRICE * quantity;
 
   const handleBuy = () => {
-    window.location.href = `/checkout?quantity=${quantity}`;
+    window.location.href = `/checkout?product=vermelha&quantity=${quantity}`;
   };
 
   return (
@@ -375,6 +436,41 @@ function FAQ() {
   );
 }
 
+function Lineup() {
+  return (
+    <section className="section lineup" id="linha" aria-labelledby="lineup-title">
+      <div className="container">
+        <div className="section-heading" data-reveal>
+          <div>
+            <p className="section-kicker">A linha Rubee Apis</p>
+            <h2 id="lineup-title">Conheça a linha completa.<br/><em>Mais formas de cuidar de você.</em></h2>
+          </div>
+          <p>Além do nosso Extrato de Própolis Vermelha, a Rubee Apis oferece outras formas de incluir a própolis brasileira na sua rotina.</p>
+        </div>
+        <div className="lineup-grid">
+          {lineup.map((item, index) => (
+            <article className="lineup-card" key={item.name} data-reveal style={{ transitionDelay: `${index * 90}ms` }}>
+              <div className="lineup-media">
+                <img src={item.image} alt={item.name} loading="lazy" />
+              </div>
+              <div className="lineup-body">
+                <span className="lineup-tag">{item.tag}</span>
+                <h3>{item.name}</h3>
+                <p>{item.text}</p>
+                <div className="lineup-foot">
+                  <div className="lineup-price"><span>{item.meta}</span><strong>{formatBRL(PRICE)}</strong></div>
+                  <a className="button button--wine lineup-buy" href={`/checkout?product=${item.id}`}>Comprar <Icon name="arrow" size={17}/></a>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+        <p className="lineup-note" data-reveal>Produtos da linha Rubee Apis. Consulte disponibilidade e orientações de uso no rótulo de cada produto.</p>
+      </div>
+    </section>
+  );
+}
+
 function Closing() {
   return (
     <section className="closing">
@@ -413,6 +509,8 @@ function CheckoutBrand() {
 function CheckoutPage() {
   const params = new URLSearchParams(window.location.search);
   const initialQuantity = Math.min(10, Math.max(1, Math.floor(Number(params.get("quantity"))) || 1));
+  const productId = resolveProduct(params.get("product"));
+  const product = CHECKOUT_PRODUCTS[productId];
   const [quantity, setQuantity] = useState(initialQuantity);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -426,7 +524,7 @@ function CheckoutPage() {
       const response = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ quantity }),
+        body: JSON.stringify({ quantity, product: productId }),
       });
       const data = (await response.json()) as { url?: string; error?: string };
       if (!response.ok || !data.url) {
@@ -451,7 +549,7 @@ function CheckoutPage() {
       </header>
       <section className="container checkout-layout">
         <div className="checkout-intro">
-          <a className="checkout-back" href="/#comprar">← Voltar para a loja</a>
+          <a className="checkout-back" href={productId === "vermelha" ? "/#comprar" : "/#linha"}>← Voltar para a loja</a>
           <p className="section-kicker">Revise seu pedido</p>
           <h1>Falta só um passo<br/><em>para a Rubee Apis ser sua.</em></h1>
           <p>Confira a quantidade e siga para o ambiente seguro da Stripe. Seus dados de pagamento não passam pelos servidores da Rubee Apis.</p>
@@ -463,8 +561,8 @@ function CheckoutPage() {
         </div>
         <aside className="checkout-summary" aria-label="Resumo do pedido">
           <div className="checkout-summary-product">
-            <img src="/images/product-packshot-official.png" alt="Frasco e embalagem Rubee Apis" width="705" height="1199" />
-            <div><small>Extrato de própolis vermelha</small><h2>Rubee Apis · 30 ml</h2><p>Sabor suave · Conta-gotas · Origem alagoana</p></div>
+            <img src={product.image} alt={product.alt} />
+            <div><small>Linha Rubee Apis</small><h2>{product.name}</h2><p>{product.subtitle}</p></div>
           </div>
           <div className="checkout-quantity">
             <span>Quantidade</span>
@@ -494,6 +592,8 @@ type CheckoutConfirmation = {
   email?: string;
   customerName?: string;
   quantity?: number;
+  product?: string;
+  productName?: string;
 };
 
 function OrderConfirmationPage() {
@@ -525,7 +625,7 @@ function OrderConfirmationPage() {
       <section className="confirmation-card" aria-live="polite">
         {!confirmation && !error && <><span className="confirmation-loader"/><h1>Confirmando seu pagamento…</h1><p>Estamos consultando a Stripe com segurança.</p></>}
         {error && <><div className="confirmation-icon confirmation-icon--error">!</div><h1>Não foi possível confirmar agora.</h1><p>{error}</p><a className="button button--gold" href="/checkout">Voltar ao checkout <Icon name="arrow" size={18}/></a></>}
-        {confirmation && confirmation.paid && <><div className="confirmation-icon"><Icon name="check" size={30}/></div><p className="section-kicker">Pagamento confirmado</p><h1>Pedido recebido.<br/><em>Obrigado pela confiança.</em></h1><p>{confirmation.customerName ? `${confirmation.customerName}, o` : "O"} comprovante e os detalhes do pedido foram enviados para <b>{confirmation.email ?? "seu e-mail"}</b>.</p><div className="confirmation-summary"><span>{confirmation.quantity ?? 1}× Rubee Apis · 30 ml</span><strong>{amount}</strong></div><a className="button button--gold" href="/">Voltar ao site <Icon name="arrow" size={18}/></a></>}
+        {confirmation && confirmation.paid && <><div className="confirmation-icon"><Icon name="check" size={30}/></div><p className="section-kicker">Pagamento confirmado</p><h1>Pedido recebido.<br/><em>Obrigado pela confiança.</em></h1><p>{confirmation.customerName ? `${confirmation.customerName}, o` : "O"} comprovante e os detalhes do pedido foram enviados para <b>{confirmation.email ?? "seu e-mail"}</b>.</p><div className="confirmation-summary"><span>{confirmation.quantity ?? 1}× {confirmation.productName ?? (confirmation.product && confirmation.product in CHECKOUT_PRODUCTS ? CHECKOUT_PRODUCTS[confirmation.product as ProductId].name : "Rubee Apis")}</span><strong>{amount}</strong></div><a className="button button--gold" href="/">Voltar ao site <Icon name="arrow" size={18}/></a></>}
         {confirmation && !confirmation.paid && <><div className="confirmation-icon confirmation-icon--error">!</div><h1>Pagamento ainda não confirmado.</h1><p>A Stripe ainda não marcou esta sessão como paga. Nenhum pedido será considerado confirmado antes dessa validação.</p><a className="button button--gold" href="/checkout">Tentar novamente <Icon name="arrow" size={18}/></a></>}
       </section>
     </main>
@@ -551,6 +651,7 @@ function App() {
         <Ritual />
         <Identification />
         <FAQ />
+        <Lineup />
         <Closing />
       </main>
       <Footer />

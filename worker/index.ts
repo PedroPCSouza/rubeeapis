@@ -12,8 +12,18 @@ interface Env {
   ASSETS: { fetch(request: Request): Promise<Response> };
 }
 
-const PRICE_CENTS = 11990; // R$ 119,90
-const PRODUCT_NAME = "Rubee Apis · Extrato de Própolis Vermelha 30 ml";
+const PRICE_CENTS = 11990; // R$ 119,90 — preço único para toda a linha
+
+// Catálogo da linha Rubee Apis. Todos os produtos compartilham o mesmo preço.
+// `useConfiguredPrice` faz o produto usar o Price já cadastrado na Stripe
+// (env.STRIPE_PRICE_ID); os demais são criados via price_data com o mesmo valor.
+const PRODUCTS: Record<string, { name: string; useConfiguredPrice?: boolean }> = {
+  vermelha: { name: "Rubee Apis · Extrato de Própolis Vermelha 30 ml", useConfiguredPrice: true },
+  capsula: { name: "Rubee Apis · Própolis Vermelha em Cápsulas · 60 cápsulas" },
+  verde: { name: "Rubee Apis · Extrato de Própolis Verde 30 ml" },
+  blend: { name: "Rubee Apis · Blend Própolis Verde + Vermelha 30 ml" },
+};
+const DEFAULT_PRODUCT = "vermelha";
 
 function hex(buffer: ArrayBuffer) {
   return Array.from(new Uint8Array(buffer), (byte) => byte.toString(16).padStart(2, "0")).join("");
@@ -77,17 +87,20 @@ export default {
         return Response.json({ error: "Checkout não configurado." }, { status: 503 });
       }
       let quantity = 1;
+      let product = DEFAULT_PRODUCT;
       try {
-        const body = (await request.json()) as { quantity?: unknown };
+        const body = (await request.json()) as { quantity?: unknown; product?: unknown };
         quantity = Math.min(10, Math.max(1, Math.floor(Number(body.quantity)) || 1));
+        if (typeof body.product === "string" && body.product in PRODUCTS) product = body.product;
       } catch {
         quantity = 1;
       }
+      const selected = PRODUCTS[product];
 
       const params = new URLSearchParams({
         mode: "payment",
         success_url: `${url.origin}/pedido-confirmado?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${url.origin}/checkout?quantity=${quantity}&cancelado=1`,
+        cancel_url: `${url.origin}/checkout?product=${product}&quantity=${quantity}&cancelado=1`,
         locale: "pt-BR",
         customer_creation: "always",
         billing_address_collection: "required",
@@ -95,15 +108,16 @@ export default {
         "shipping_address_collection[allowed_countries][0]": "BR",
         submit_type: "pay",
         "line_items[0][quantity]": String(quantity),
-        "metadata[product]": "rubee-apis-30ml",
+        "metadata[product]": product,
+        "metadata[product_name]": selected.name,
         "metadata[quantity]": String(quantity),
       });
-      if (env.STRIPE_PRICE_ID) {
+      if (env.STRIPE_PRICE_ID && selected.useConfiguredPrice) {
         params.set("line_items[0][price]", env.STRIPE_PRICE_ID);
       } else {
         params.set("line_items[0][price_data][currency]", "brl");
         params.set("line_items[0][price_data][unit_amount]", String(PRICE_CENTS));
-        params.set("line_items[0][price_data][product_data][name]", PRODUCT_NAME);
+        params.set("line_items[0][price_data][product_data][name]", selected.name);
       }
 
       try {
@@ -142,7 +156,7 @@ export default {
           amount_total?: number;
           currency?: string;
           customer_details?: { email?: string; name?: string };
-          metadata?: { quantity?: string };
+          metadata?: { quantity?: string; product?: string; product_name?: string };
           error?: { message?: string };
         };
         if (!response.ok) {
@@ -157,6 +171,8 @@ export default {
           email: session.customer_details?.email,
           customerName: session.customer_details?.name,
           quantity: Number(session.metadata?.quantity) || 1,
+          product: session.metadata?.product,
+          productName: session.metadata?.product_name ?? (session.metadata?.product ? PRODUCTS[session.metadata.product]?.name : undefined),
         });
       } catch {
         return Response.json({ error: "Não foi possível confirmar o pedido." }, { status: 500 });
